@@ -6,29 +6,5 @@
     fill: none;
     pointer-events: all;
   }
-  
-  .feature {
-    fill: #ccc;
-    cursor: pointer;
-  }
-  
-  .feature.active {
-    fill: orange;
-  }
-  
-  .mesh {
-    fill: none;
-    stroke: #fff;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  [class*="gauge-color"] {
-    fill: #ccc;
-  }
-
-  [class*="gauge-color"].active {
-    fill: orange;
-  }
 
  
