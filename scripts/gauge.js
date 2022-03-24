@@ -29,7 +29,7 @@ export default class GaugeFactory{
       needleColor: "black",
       needleRadius: 10,
       sectionsPadding: .05,
-      sectionsCount: 8,
+      sectionsCount: 12,
       sectionsColors: undefined
     }
   }

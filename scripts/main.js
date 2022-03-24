@@ -1,6 +1,8 @@
-
+import Slider from './slider.js';
 import UsMap from './usmap.js'; 
 import GaugeFactory from './gauge.js'; 
+
+let slider = new Slider("date-slider");
 
 let map = new UsMap("hotspots");
 
