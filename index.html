@@ -1,13 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>HTML 5 Boilerplate</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-	<script src="main.js"></script>
-  </body>
+    <title>COVID Visualization Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+  
+  <nav class="navbar navbar-light bg-light p-3">
+    <div class="d-flex col-12 col-md-3 col-lg-2 mb-2 mb-lg-0 flex-wrap flex-md-nowrap justify-content-between">
+        <a class="navbar-brand" href="#">COVID Visualization Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+
+    <div class="row">
+
+        <main class="col px-md-4 py-4">
+            
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <!-- <li class="breadcrumb-item active" aria-current="page">Overview</li> -->
+              </ol>
+            </nav>
+
+            <!-- <h1 class="h2">Dashboard</h1>
+            <p>This is the homepage of a simple admin interface which is part of a tutorial written on Themesberg</p> -->
+            
+            <div class="row my-4">
+              <div class="col-3">
+                  <div class="card">
+                      <h5 class="card-header">Cases</h5>
+                      <div class="card-body" id="cases">                     
+                      </div>
+                    </div>
+              </div>
+              <div class="col-3">
+                  <div class="card">
+                      <h5 class="card-header">Deaths</h5>
+                      <div class="card-body" id="deaths">
+                      </div>
+                    </div>
+              </div>
+              <div class="col-3">
+                  <div class="card">
+                      <h5 class="card-header">1st Vaccines</h5>
+                      <div class="card-body" id="vaccines">
+                      </div>
+                    </div>
+              </div>
+              <div class="col-3">
+                <div class="card">
+                    <h5 class="card-header">2nd Vaccines</h5>
+                    <div class="card-body" id="secondVaccines">
+                    </div>
+                  </div>
+            </div>
+              <!-- <div class="col-3">
+                  <div class="card">
+                      <h5 class="card-header">2nd Vaccines</h5>
+                      <div class="card-body">
+                        <h5 class="card-title">64k</h5>
+                        <p class="card-text">Feb 1 - Apr 1, United States</p>
+                        <p class="card-text text-success">2.5% increase since last month</p>
+                      </div>
+                    </div>
+              </div> -->
+            </div>
+
+            <div class="row">
+              <div class="col-8">
+                  <div class="card">
+                      <h5 class="card-header">Hot Spots</h5>
+                      <div class="card-body" id="hotspots">
+                      </div>
+                  </div>
+              </div> 
+              <div class="col-4">
+                <div class="card">
+                    <h5 class="card-header">Some Chart</h5>
+                    <div class="card-body">
+                    </div>
+                </div>
+            </div>              
+            </div>
+
+            <div class="row my-4">
+              <div class="col">
+                <div class="card">
+                    <h5 class="card-header">Some Graph</h5>
+                    <div class="card-body">
+                      <h5 class="card-title">64k</h5>
+                      <p class="card-text">Feb 1 - Apr 1, United States</p>
+                      <p class="card-text text-success">2.5% increase since last month</p>
+                    </div>
+                  </div>
+            </div>
+
+            <!-- <footer class="pt-5 d-flex justify-content-between">
+              <span>Copyright © 2019-2020 <a href="https://themesberg.com">Themesberg</a></span>
+              <ul class="nav m-0">
+                  <li class="nav-item">
+                    <a class="nav-link text-secondary" aria-current="page" href="#">Privacy Policy</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-secondary" href="#">Terms and conditions</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-secondary" href="#">Contact</a>
+                  </li>
+                </ul>
+            </footer> -->
+
+        </main>
+
+    </div>
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/d3-transition@3"></script> -->
+  <script src="//d3js.org/topojson.v1.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script type="module" src="scripts/main.js"></script>
+</body>
 </html>
