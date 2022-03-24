@@ -23,4 +23,12 @@
     stroke-linejoin: round;
   }
 
+  [class*="gauge-color"] {
+    fill: #ccc;
+  }
+
+  [class*="gauge-color"].active {
+    fill: orange;
+  }
+
  
