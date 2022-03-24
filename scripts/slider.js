@@ -1,3 +1,5 @@
+import EventBus from './eventbus.js'
+
 export default class Slider{
     
     constructor(id){
@@ -6,7 +8,8 @@ export default class Slider{
         var startDate = new Date("2019-10-01");
         var endDate = new Date("2022-04-01");
 
-        const formatDate = d3.timeFormat("%b %Y");        
+        const formatMonthYear = d3.timeFormat("%b %Y");
+        const formatMonthDayYear = d3.timeFormat("%b %d, %Y");     
 
         const margin = {top:0, right:50, bottom:0, left:50};
         const width = 1000;
@@ -54,7 +57,7 @@ export default class Slider{
             .attr("x", x)
             .attr("y", 10)
             .attr("text-anchor", "middle")
-            .text(function(d) { return formatDate(d); });
+            .text(function(d) { return formatMonthYear(d); });
 
         const handle = slider.insert("circle", ".track-overlay")
             .attr("class", "handle")
@@ -63,13 +66,14 @@ export default class Slider{
         const label = slider.append("text")  
             .attr("class", "label")
             .attr("text-anchor", "middle")
-            .text(formatDate(startDate))
+            .text(formatMonthDayYear(startDate))
             .attr("transform", "translate(0," + (-25) + ")")
 
-        function update(h) {
-                handle.attr("cx", x(h));
-                label.attr("x", x(h))
-                    .text(formatDate(h));
+        function update(d) {
+                handle.attr("cx", x(d));
+                label.attr("x", x(d))
+                    .text(formatMonthDayYear(d));
+                EventBus.publish("DateChanged", d);
             }
     }
 }
