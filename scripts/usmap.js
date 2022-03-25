@@ -27,7 +27,7 @@ export default class UsMap {
 
         const g = svg.append("g");;
 
-        d3.json("/data/us.json").then(us => {
+        d3.json("./data/us.json").then(us => {
 
             g.selectAll("path")
                 .data(topojson.feature(us, us.objects.states).features)
