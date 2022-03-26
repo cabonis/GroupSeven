@@ -2,6 +2,7 @@ import EventBus from './eventbus.js'
 import Slider from './slider.js';
 import UsMap from './usmap.js'; 
 import GaugeFactory from './gauge.js'; 
+import BarChart from './barchart.js';
 
 let slider = new Slider("date-slider");
 
@@ -13,11 +14,19 @@ let gauge2 = gaugeFactory.createGauge("deaths");
 let gauge3 = gaugeFactory.createGauge("vaccines");
 let gauge4 = gaugeFactory.createGauge("hospitals");
 
+let barchart = new BarChart("vaccinations");
+
+
 // Event bus test
 EventBus.subscribe("DateChanged", (date) => {
-    document.getElementById("selected-date").innerHTML = date;
     gauge1.percent = Math.random();
     gauge2.percent = Math.random();
     gauge3.percent = Math.random();
     gauge4.percent = Math.random();
+
+    barchart.update([
+        {name:"1st Dose", value: Math.random() * 100},
+        {name:"2nd Dose", value: Math.random() * 100},
+        {name:"Booster", value: Math.random() * 100}]
+    );
 });
