@@ -23,13 +23,13 @@ export default class GaugeFactory{
     return {
       animationDelay: 0,
       animationDuration: 1000,
-      barWidth: 40,
+      barWidth: 25,
       chartInset: 0,
       interval: [0, 1],
       needleColor: "black",
-      needleRadius: 10,
+      needleRadius: 4,
       sectionsPadding: .05,
-      sectionsCount: 12,
+      sectionsCount: 7,
       sectionsColors: undefined
     }
   }
@@ -101,10 +101,9 @@ class Gauge {
   
   constructor(id, config) {
     
-    const size = {
-      viewbox: {width: 200, height:100},
-      margins: {top: 20, right: 20, bottom: 20, left: 20}
-    };
+    const width = 200;
+    const height = 100;
+    const margin = {top: 40, right: 20, bottom: 5, left: 20};
 
     this._config = config;
     this.percent = 0;
@@ -113,13 +112,16 @@ class Gauge {
     const sectionPercentage = 1 / config.sectionsCount / 2;
 
     let totalPercent = 0.75;
-    const radius = Math.min(size.viewbox.width, size.viewbox.height * 2) / 2;
+    const radius = Math.min(width, height * 2) / 2;
+
+    const viewboxWidth = width + margin.right + margin.left;
+    const viewboxHeight = height + margin.top + margin.bottom;
 
     const svg = d3.select("#" + id).append("svg")
-      .attr("viewBox", `0, 0, ${size.viewbox.width}, ${size.viewbox.height}`);
+      .attr("viewBox", `0, 0, ${viewboxWidth}, ${viewboxHeight}`);
 
     this._chart = svg.append('g')
-      .attr('transform', `translate(${size.viewbox.width / 2}, ${size.viewbox.height})`);
+      .attr('transform', `translate(${viewboxWidth / 2}, ${height + margin.top})`);
 
     this._arcs = this._chart.selectAll('.arc')
       .data(d3.range(1, config.sectionsCount + 1))
@@ -133,6 +135,7 @@ class Gauge {
 
         const startPadRad = sectionIndex === 0 ? 0 : config.sectionsPadding / 2;
         const endPadRad = sectionIndex === config.sectionsCount ? 0 : config.sectionsPadding / 2;
+        
         const arc = d3.arc()
           .outerRadius(radius - config.chartInset)
           .innerRadius(radius - config.chartInset - config.barWidth)
@@ -150,7 +153,7 @@ class Gauge {
       animationDelay: config.animationDelay,
       animationDuration: config.animationDuration,
       color: config.needleColor,
-      length: size.viewbox.height * 0.5,
+      length: height,
       percent: this._percent,
       radius: config.needleRadius
     });
