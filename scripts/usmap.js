@@ -1,42 +1,45 @@
+import EventBus from './eventbus.js'
+
 export default class UsMap {
+
+    #chart;
+    #active;
 
     constructor(id) {
         
-        const size = {
-            viewbox: {width: 1000, height:500},
-            margins: {top: 20, right: 20, bottom: 20, left: 20}
-        };
+        const self = this;
 
-        var active = d3.select(null);
+        const width = 1000;
+        const height = 500;
 
-        const projection = d3.geoAlbersUsa()
-            .scale(1000)
-            .translate([size.viewbox.width / 2, size.viewbox.height / 2]);
+        self.#active = d3.select(null);
 
         const geoPathGenerator = d3.geoPath()
-            .projection(projection);
+            .projection(d3.geoAlbersUsa()
+                .scale(width)
+                .translate([width / 2, height / 2]));
 
         const svg = d3.select("#" + id).append("svg")
-            .attr("viewBox", `0, 0, ${size.viewbox.width}, ${size.viewbox.height}`);
+            .attr("viewBox", `0, 0, ${width}, ${height}`);
 
-        svg.append("rect")
+        self.#chart = svg.append("g");
+
+        self.#chart.append("rect")
             .attr("class", "background")
-            .attr("width", size.viewbox.width)
-            .attr("height", size.viewbox.height)
+            .attr("width", width)
+            .attr("height", height)
             .on("click", reset);
-
-        const g = svg.append("g");;
 
         d3.json("./data/us.json").then(us => {
 
-            g.selectAll("path")
+            self.#chart.selectAll("path")
                 .data(topojson.feature(us, us.objects.states).features)
                 .enter().append("path")
                 .attr("d", geoPathGenerator)
                 .attr("class", "feature")
                 .on("click", clicked);
 
-            g.append("path")
+            self.#chart.append("path")
                 .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
                 .attr("class", "mesh")
                 .attr("d", geoPathGenerator);
@@ -44,38 +47,50 @@ export default class UsMap {
 
         const zoom = d3.zoom()
             .scaleExtent([1, 8])
-            .on("zoom", zoomed);
+            .on("zoom", () => {
+                self.#chart.style("stroke-width", 1.5 / d3.event.transform.k + "px");
+                self.#chart.attr("transform", d3.event.transform);
+        });
 
         function clicked(d) {
-            if (active.node() === this) return reset();
-            active.classed("active", false);
-            active = d3.select(this).classed("active", true);
+                if (self.#active.node() === this) return reset();
+        
+                self.#active.classed("active", false);
+                self.#active = d3.select(this).classed("active", true);
+        
+                const bounds = geoPathGenerator.bounds(d),
+                    dx = bounds[1][0] - bounds[0][0],
+                    dy = bounds[1][1] - bounds[0][1],
+                    x = (bounds[0][0] + bounds[1][0]) / 2,
+                    y = (bounds[0][1] + bounds[1][1]) / 2,
+                    scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height))),
+                    translate = [width / 2 - scale * x, height / 2 - scale * y];
+        
+                self.#chart.transition()
+                    .duration(750)
+                    .call( zoom.transform, d3.zoomIdentity.translate(translate[0],translate[1]).scale(scale) );
 
-            var bounds = geoPathGenerator.bounds(d),
-                dx = bounds[1][0] - bounds[0][0],
-                dy = bounds[1][1] - bounds[0][1],
-                x = (bounds[0][0] + bounds[1][0]) / 2,
-                y = (bounds[0][1] + bounds[1][1]) / 2,
-                scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / size.viewbox.width, dy / size.viewbox.height))),
-                translate = [size.viewbox.width / 2 - scale * x, size.viewbox.height / 2 - scale * y];
-
-            svg.transition()
-                .duration(750)
-                .call( zoom.transform, d3.zoomIdentity.translate(translate[0],translate[1]).scale(scale) );
+                EventBus.publish("ContextChanged", d.id);
         }
-
+        
         function reset() {
-            active.classed("active", false);
-            active = d3.select(null);
-
-            svg.transition()
-                .duration(750)
-                .call( zoom.transform, d3.zoomIdentity );
+            self.#active.classed("active", false);
+            self.#active = d3.select(null);        
+            self.#chart.transition()
+                    .duration(750)
+                    .call( zoom.transform, d3.zoomIdentity );
+            EventBus.publish("ContextChanged", 0);
         }
+            
+    }
 
-        function zoomed() {
-            g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
-            g.attr("transform", d3.event.transform);
+    getActive(){
+        const node = this.#active.node();
+        if(node) {
+            return node.__data__.id;
         }
-    }  
+        return 0;
+    }
+
+    
 }

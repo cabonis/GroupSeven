@@ -1,0 +1,11 @@
+.background {
+  fill: none;
+  pointer-events: all;
+}
+
+.mesh {
+    fill: none;
+    stroke: #fff;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
