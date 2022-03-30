@@ -1,21 +1,20 @@
 import EventBus from './eventbus.js'
 import Slider from './slider.js';
 import UsMap from './usmap.js'; 
-import GaugeFactory from './gauge.js'; 
+import Gauge from './gauge.js'; 
 import BarChart from './barchart.js';
 
 let slider = new Slider("date-slider");
 
 let map = new UsMap("hotspots");
 
-let gaugeFactory = new GaugeFactory();
-let gauge1 = gaugeFactory.createGauge("cases");
-let gauge2 = gaugeFactory.createGauge("deaths");
-let gauge3 = gaugeFactory.createGauge("vaccines");
-let gauge4 = gaugeFactory.createGauge("hospitals");
+let gauge1 = new Gauge("cases", {interval:[0, .04]});
+let gauge2 = new Gauge("deaths", {interval:[0, .04]});
+let gauge3 = new Gauge("vaccines");
+let gauge4 = new Gauge("hospitals");
 
 let barchart = new BarChart("vaccinations");
-
+barchart.update(randBarData());
 
 // Event bus test
 EventBus.subscribe("DateChanged", (date) => {
@@ -23,10 +22,13 @@ EventBus.subscribe("DateChanged", (date) => {
     gauge2.percent = Math.random();
     gauge3.percent = Math.random();
     gauge4.percent = Math.random();
+    barchart.update(randBarData());
+});
 
-    barchart.update([
+function randBarData(){
+    return [
         {name:"1st Dose", value: Math.random() * 100},
         {name:"2nd Dose", value: Math.random() * 100},
-        {name:"Booster", value: Math.random() * 100}]
-    );
-});
+        {name:"Booster", value: Math.random() * 100}
+    ];
+}

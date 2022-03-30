@@ -48,7 +48,7 @@ export default class Slider{
             );
 
         slider.insert("g", ".track-overlay")
-            .attr("class", "ticks")
+            .attr("class", "slider ticks")
             .attr("transform", "translate(0," + 18 + ")")
             .selectAll("text")
             .data(x.ticks(10))
