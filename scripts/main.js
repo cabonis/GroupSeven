@@ -19,10 +19,10 @@ let barchart = new BarChart("vaccinations");
 
 // Event bus test
 EventBus.subscribe("DateChanged", (date) => {
-    gauge1.percent = Math.random();
-    gauge2.percent = Math.random();
-    gauge3.percent = Math.random();
-    gauge4.percent = Math.random();
+    gauge1.Percent = Math.random();
+    gauge2.Percent = Math.random();
+    gauge3.Percent = Math.random();
+    gauge4.Percent = Math.random();
 
     barchart.update([
         {name:"1st Dose", value: Math.random() * 100},

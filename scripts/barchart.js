@@ -4,7 +4,7 @@ export default class BarChart{
 
         this.width = 400;
         this.height = 450;
-        this.margin = { top: 20, right: 20, bottom: 20, left: 20 }
+        this.margin = { top: 20, right: 20, bottom: 20, left: 30 }
 
         const viewboxWidth = this.width + this.margin.right + this.margin.left;
         const viewboxHeight = this.height + this.margin.top + this.margin.bottom;
@@ -22,14 +22,16 @@ export default class BarChart{
             .padding(0.2);
         
         this.xAxis = this.chart.append("g")
-            .attr("transform", "translate(" + 0 + "," + this.height + ")");
+            .attr("transform", "translate(" + 0 + "," + this.height + ")")
+            .attr("class", "barchart axis");
 
         this.y = d3.scaleLinear()
             .domain([0, 100])
             .range([this.height, 0]);
         
         this.yAxis = this.chart.append("g")
-            .attr("transform", "translate(" + 0 + "," + 0 + ")");
+            .attr("transform", "translate(" + 0 + "," + 0 + ")")
+            .attr("class", "barchart axis");
     }
 
     update(data) {

@@ -35,7 +35,7 @@
     fill: orange;
   }
 
-  .ticks {
+  .slider.ticks {
     font-size: 10px;
   }
 
@@ -68,5 +68,19 @@
     stroke: #000;
     stroke-opacity: 0.5;
     stroke-width: 1.25px;
+  }
+
+  .gauge.ticks {
+    font-family: sans-serif;
+    font-size: .8em;
+    text-anchor: middle;    
+  }
+
+  .gauge.needle {
+    fill: black;
+  }
+
+  .barchart.axis {
+    font-size: .8em;
   }
  
