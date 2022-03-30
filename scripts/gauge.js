@@ -1,33 +1,15 @@
 const percToDeg = perc => perc * 360;
 const degToRad = deg => (deg * Math.PI) / 180;
 const percToRad = perc => degToRad(percToDeg(perc));
-
-export default class GaugeFactory{
-
-  createGauge(id, config = this.getDefaultConfig()){
-    return new Gauge(id, config);
-  }
-
-  getDefaultConfig(){
-    /**                      The configuration to use to initialize the gauge.
-     * @interval             The interval (min and max values) of the gauge. By default, the interval is [0, 1].
-     * @sectionsCount        The number of sections in the gauge.
-     * @numTicks             The number of scale tick marks
-     */
-    return {
-      interval: [0, 1],
-      sectionsCount: 7,
-      numTicks: 5
-    }
-  }
-}
+const halfPI = Math.PI / 2;
 
 class Needle {
 
   #element;
   #needleLength;
   #needleRadius = 4;  
-  #percent = 0;
+  #currentPercent = 0;
+  #targetPercent = 0;
 
   constructor(element, needleLength) {    
     this.#element = element;
@@ -35,11 +17,10 @@ class Needle {
 
     this.#element.append('path')
       .attr('class', 'gauge needle')
-      .attr('d', this.#getPath(this.#percent));
+      .attr('d', this.#getPath(this.#targetPercent));
   }
 
   #getPath(percent) {
-    const halfPI = Math.PI / 2;
     const thetaRad = percToRad(percent / 2);
     const centerX = 0;
     const centerY = 0;
@@ -55,6 +36,7 @@ class Needle {
   update(percent) {    
     const self = this;
     const animationDuration = 1000;
+    this.#targetPercent = percent;
 
     this.#element.transition()
       .ease(d3.easeElasticOut.amplitude(1).period(1))
@@ -62,22 +44,22 @@ class Needle {
       .selectAll('.needle')
       .tween('progress', function () {
         const thisElement = this;
-        const delta = percent - self.#percent;
-        const initialPercent = self.#percent;
+        const delta = percent - self.#currentPercent;
+        const initialPercent = self.#currentPercent;
         return function (progressPercent) {
-          self.#percent = initialPercent + progressPercent * delta;
+          self.#currentPercent = initialPercent + progressPercent * delta;
           return d3.select(thisElement)
-            .attr('d', self.#getPath(self.#percent));
+            .attr('d', self.#getPath(self.#currentPercent));
         }
       });
   }
 
-  get Percent() {
-    return this.#percent;
+  get percent() {
+    return this.#targetPercent;
   }
 }
 
-class Gauge {
+export default class Gauge {
   
   #numSections;
   #numTicks;
@@ -89,8 +71,13 @@ class Gauge {
   #needle;
   #scale;
 
-  constructor(id, interval = [0, 1], numSections = 7, numTicks = 5) {
+  constructor(id, options) {
     
+    if (options === undefined) options = {};
+    if (options.interval === undefined) options.interval = [0, 1];
+    if (options.numSections === undefined) options.numSections = 7;
+    if (options.numTicks === undefined) options.numTicks = 5;
+
     const width = 200;
     const height = 100;
     const margin = {top: 40, right: 20, bottom: 5, left: 20};
@@ -99,13 +86,13 @@ class Gauge {
     const barInset = 0;
     const sectionsPadding = .05;
 
-    this.#numSections = numSections;
-    this.#numTicks = numTicks;
+    this.#numSections = options.numSections;
+    this.#numTicks = options.numTicks;
     this.#radius = Math.min(width, height * 2) / 2;
     this.#tickPadding = 10;
 
-    this.Percent = 0;
-    this.Interval = [0, 1];
+    this.percent = 0;
+    this.interval = options.interval;
 
     const viewboxWidth = width + margin.right + margin.left;
     const viewboxHeight = height + margin.top + margin.bottom;
@@ -157,7 +144,7 @@ class Gauge {
     }
     
     this.#arcs.classed('active', (d, i) => {
-      return i === Math.floor(this.Percent * this.#numSections);
+      return i === Math.floor(this.percent * this.#numSections);
     });
   }
 
@@ -169,7 +156,7 @@ class Gauge {
 
     this.#ticks.selectAll('.ticks').remove();
 
-    const interval = this.Interval;
+    const interval = this.interval;
     const valuePerTick = (interval[1] - interval[0]) / (this.#numTicks - 1);
     const percentPerTick = 1 / (this.#numTicks - 1);
 
@@ -200,7 +187,7 @@ class Gauge {
       .text(d => d.value);
   }
 
-  get Interval() {
+  get interval() {
     if(!this.#scale) {
       return;
     }
@@ -208,7 +195,7 @@ class Gauge {
     return this.#scale.domain();
   }
 
-  set Interval(interval) {
+  set interval(interval) {
     this.#scale = d3.scaleLinear()
       .domain(interval)
       .range([0, 1])
@@ -216,18 +203,18 @@ class Gauge {
     this.#drawTicks();
   }
 
-  get Percent() {
-    return this.#needle.Percent;
+  get percent() {
+    return this.#needle.percent;
   }
 
-  set Percent(percent) {
+  set percent(percent) {
     if (this.#needle) {
       this.#needle.update(percent);
     }
     this.#update();
   }
 
-  set Value(value) {
-    this.Percent = this.#scale(value);
+  set value(value) {
+    this.percent = this.#scale(value);
   }  
 }
