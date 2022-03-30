@@ -1,0 +1,17 @@
+[class*="gauge-color"] {
+    fill: #ccc;
+}
+
+[class*="gauge-color"].active {
+    fill: orange;
+}
+
+.gauge.ticks {
+    font-family: sans-serif;
+    font-size: .8em;
+    text-anchor: middle;    
+}
+
+.gauge.needle {
+    fill: black;
+}

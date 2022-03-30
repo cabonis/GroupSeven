@@ -73,10 +73,10 @@ export default class Gauge {
 
   constructor(id, options) {
     
-    if (options === undefined) options = {};
-    if (options.interval === undefined) options.interval = [0, 1];
-    if (options.numSections === undefined) options.numSections = 7;
-    if (options.numTicks === undefined) options.numTicks = 5;
+    if (!options) options = {};
+    if (!options.interval) options.interval = [0, 1];
+    if (!options.numSections) options.numSections = 7;
+    if (!options.numTicks) options.numTicks = 5;
 
     const width = 200;
     const height = 100;
