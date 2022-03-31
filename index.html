@@ -16,89 +16,29 @@
     </div>
   </nav>
   
-  <div class="container-fluid">
-
+  <div class="container-xl">
     <div class="row">
-
         <main class="col px-md-4 py-4">
-
           <div class="row">
             <div class="col">
               <div class="card py-4" id="date-slider"></div>
             </div>
-          </div>
-          
+          </div>          
           <div class="row my-4">
-            <div class="col-3" id="cases">
-
-                <!-- <div class="card h-100">
-                  <div class="card-header container-fluid">
-                    <div class="row">
-                      <div class="col">
-                        <h5>Cases</h5>
-                      </div>
-                      <div class="col-2">
-                        <button type="button" class="btn bi-gear-fill float-right" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
-                      </div>
-                    </div>
-                  </div>                                        
-                  <div class="card-body" id="cases"></div>
-                </div> -->
-
-            </div>
-
-            <div class="col-3">
-                <div class="card h-100">
-                    <h5 class="card-header">Deaths</h5>
-                    <div class="card-body" id="deaths">
-                    </div>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="card h-100">
-                    <h5 class="card-header">Hospital Staffing</h5>
-                    <div class="card-body" id="vaccines">
-                    </div>
-                </div>
-            </div>
-            <div class="col-3">
-              <div class="card h-100">
-                  <h5 class="card-header">Hospital Capacity</h5>
-                  <div class="card-body" id="hospitals">
-                  </div>
-              </div>
-            </div>
-            <!-- <div class="col-3">
-                <div class="card">
-                    <h5 class="card-header">2nd Vaccines</h5>
-                    <div class="card-body">
-                      <h5 class="card-title">64k</h5>
-                      <p class="card-text">Feb 1 - Apr 1, United States</p>
-                      <p class="card-text text-success">2.5% increase since last month</p>
-                    </div>
-                  </div>
-            </div> -->
+            <div class="col-3" id="cases"></div>    
+            <div class="col-3" id="deaths"></div>
+            <div class="col-3" id="hospital-staffing"></div>
+            <div class="col-3" id="hospital-capacity"></div>
           </div>
-
           <div class="row">
-            <div class="col-8">
-                <div class="card h-100">
-                    <h5 class="card-header">Hot Spots</h5>
-                    <div class="card-body" id="hotspots">
-                    </div>
-                </div>
-            </div> 
-            <div class="col-4">
-              <div class="card h-100">
-                  <h5 class="card-header">Vaccinations</h5>
-                  <div class="card-body">
-                    <p class="card-text" id="vaccinations"></p>
-                  </div>
-              </div>
-          </div>              
+            <div class="col-8" id="hotspots"></div> 
+            <div class="col-4" id="vaccinations">
           </div>
+        </main>
+    </div>
+  </div>
 
-          <!-- <div class="row my-4">
+  <!-- <div class="row my-4">
             <div class="col">
               <div class="card">
                   <h5 class="card-header">Some Graph</h5>
@@ -109,40 +49,6 @@
                   </div>
                 </div>
           </div> -->
-
-          <!-- <footer class="pt-5 d-flex justify-content-between">
-            <span>Copyright © 2019-2020 <a href="https://themesberg.com">Themesberg</a></span>
-            <ul class="nav m-0">
-                <li class="nav-item">
-                  <a class="nav-link text-secondary" aria-current="page" href="#">Privacy Policy</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-secondary" href="#">Terms and conditions</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-secondary" href="#">Contact</a>
-                </li>
-              </ul>
-          </footer> -->
-
-        </main>
-
-        <div class="modal fade" id="settingsModal" tabindex="-1" data-bs-backdrop="static">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="settingsModalTitle"></h5>
-              </div>
-              <div class="modal-body" id="settingsModalContent"></div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-    </div>
-  </div>
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

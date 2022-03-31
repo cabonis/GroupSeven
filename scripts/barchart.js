@@ -1,4 +1,21 @@
-export default class BarChart{
+import InfoCard from './infocard.js';
+
+export default class BarChart extends InfoCard {
+
+  #barChartSvg;
+
+  constructor(id, title) {
+      super(id, title);
+      this.#barChartSvg = new BarChartSvg(this.contentId);
+  }
+
+  update(data) {
+      this.#barChartSvg.update(data);
+  }
+}
+
+
+class BarChartSvg {
 
     #width;
     #height;    
