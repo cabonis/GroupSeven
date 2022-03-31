@@ -3,10 +3,13 @@ import Slider from './slider.js';
 import UsMap from './usmap.js'; 
 import Gauge from './gauge.js'; 
 import BarChart from './barchart.js';
+import GaugeCard from './infocard.js';
 
 let slider = new Slider("date-slider");
 let map = new UsMap("hotspots");
-let gauge1 = new Gauge("cases", {interval:[0, .04]});
+
+let card = new GaugeCard("cases");
+//let gauge1 = new Gauge("cases", {interval:[0, .04]});
 let gauge2 = new Gauge("deaths", {interval:[0, .04]});
 let gauge3 = new Gauge("vaccines");
 let gauge4 = new Gauge("hospitals");
