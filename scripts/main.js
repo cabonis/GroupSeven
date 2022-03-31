@@ -9,7 +9,7 @@ let slider = new Slider("date-slider");
 let map = new UsMap("hotspots");
 
 let card = new GaugeCard("cases");
-//let gauge1 = new Gauge("cases", {interval:[0, .04]});
+let gauge1 = new Gauge("cases", {interval:[0, .04]});
 let gauge2 = new Gauge("deaths", {interval:[0, .04]});
 let gauge3 = new Gauge("vaccines");
 let gauge4 = new Gauge("hospitals");

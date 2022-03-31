@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COVID Visualization Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="styles/style.css">
 </head>
@@ -30,6 +30,7 @@
           
           <div class="row my-4">
             <div class="col-3" id="cases">
+
                 <!-- <div class="card h-100">
                   <div class="card-header container-fluid">
                     <div class="row">
@@ -37,13 +38,15 @@
                         <h5>Cases</h5>
                       </div>
                       <div class="col-2">
-                        <i class="bi-gear float-right"></i>
+                        <button type="button" class="btn bi-gear-fill float-right" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
                       </div>
                     </div>
                   </div>                                        
                   <div class="card-body" id="cases"></div>
                 </div> -->
+
             </div>
+
             <div class="col-3">
                 <div class="card h-100">
                     <h5 class="card-header">Deaths</h5>
@@ -124,12 +127,25 @@
 
         </main>
 
+        <div class="modal fade" id="settingsModal" tabindex="-1" data-bs-backdrop="static">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="settingsModalTitle"></h5>
+              </div>
+              <div class="modal-body" id="settingsModalContent"></div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
     </div>
   </div>
 
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script type="module" src="scripts/main.js"></script>

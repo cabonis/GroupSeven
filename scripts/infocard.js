@@ -26,6 +26,36 @@ class InfoCard {
     }
 
     #doSomething() {
+
+        document.getElementById("settingsModalTitle").innerHTML = "Case Settings";
+        document.getElementById("settingsModalContent").innerHTML = `
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+            <label class="form-check-label" for="flexRadioDefault1">
+                Default radio
+            </label>
+            </div>
+            <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+            <label class="form-check-label" for="flexRadioDefault2">
+                Default checked radio
+            </label>
+        </div>
+        `;
+
+        function OnClosed(event){
+            modalEl.removeEventListener('hidden.bs.modal', OnClosed);
+            var radio = document.getElementById("flexRadioDefault2");
+            alert(radio.checked);
+            modal.dispose();
+        }
+
+        var modalEl = document.getElementById("settingsModal");
+        modalEl.addEventListener('hidden.bs.modal', OnClosed);
+
+        var modal = new bootstrap.Modal(modalEl);        
+        modal.show();
+        
     }
 
     #showConent() {
