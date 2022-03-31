@@ -5,22 +5,23 @@ import Gauge from './gauge.js';
 import BarChart from './barchart.js';
 
 let slider = new Slider("date-slider");
-let map = new UsMap("hotspots");
-let gauge1 = new Gauge("cases", {interval:[0, .04]});
-let gauge2 = new Gauge("deaths", {interval:[0, .04]});
-let gauge3 = new Gauge("vaccines");
-let gauge4 = new Gauge("hospitals");
+let map = new UsMap("hotspots", "Hot Spots");
+let gauge1 = new Gauge("cases", "Cases", {interval:[0, .04]});
+let gauge2 = new Gauge("deaths", "Deaths", {interval:[0, .04]});
+let gauge3 = new Gauge("hospital-staffing", "Hospital Staffing");
+let gauge4 = new Gauge("hospital-capacity", "Hospital Capacity");
+let chart = new BarChart("vaccinations", "Vaccinations");
 
-let barchart = new BarChart("vaccinations");
-barchart.update(randBarData());
+
+chart.update(randBarData());
 
 // Event bus test
-EventBus.subscribe("DateChanged", (date) => {
-    gauge1.percent = Math.random();
-    gauge2.percent = Math.random();
-    gauge3.percent = Math.random();
-    gauge4.percent = Math.random();
-    barchart.update(randBarData());
+EventBus.subscribe("DateChanged", () => {
+    gauge1.update(Math.random());
+    gauge2.update(Math.random());
+    gauge3.update(Math.random());
+    gauge4.update(Math.random());
+    chart.update(randBarData());
 });
 
 

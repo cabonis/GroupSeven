@@ -1,6 +1,17 @@
 import EventBus from './eventbus.js'
+import InfoCard from './infocard.js';
 
-export default class UsMap {
+export default class UsMap extends InfoCard {
+
+  #usMapSvg;
+
+  constructor(id, title) {
+      super(id, title);
+      this.#usMapSvg = new UsMapSvg(this.contentId);
+  }
+}
+
+class UsMapSvg {
 
     #chart;
     #active;
@@ -90,7 +101,5 @@ export default class UsMap {
             return node.__data__.id;
         }
         return 0;
-    }
-
-    
+    }    
 }

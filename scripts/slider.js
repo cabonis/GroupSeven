@@ -12,8 +12,8 @@ export default class Slider{
     #legend;
 
     constructor(id){
-
-        const defaultStartDate = new Date(-1);
+        
+        const defaultStartDate = new Date(Date.parse("2020-01-01T00:00:00"));
         const defaultEndDate = new Date();           
 
         const width = 1000;

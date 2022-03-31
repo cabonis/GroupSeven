@@ -1,65 +1,20 @@
-const percToDeg = perc => perc * 360;
-const degToRad = deg => (deg * Math.PI) / 180;
-const percToRad = perc => degToRad(percToDeg(perc));
-const halfPI = Math.PI / 2;
+import InfoCard from './infocard.js';
 
-class Needle {
+export default class Gauge extends InfoCard {
 
-  #element;
-  #needleLength;
-  #needleRadius = 4;  
-  #currentPercent = 0;
-  #targetPercent = 0;
+  #gaugeSvg;
 
-  constructor(element, needleLength) {    
-    this.#element = element;
-    this.#needleLength = needleLength;
-
-    this.#element.append('path')
-      .attr('class', 'gauge needle')
-      .attr('d', this.#getPath(this.#targetPercent));
+  constructor(id, title, options) {
+      super(id, title);
+      this.#gaugeSvg = new GaugeSvg(this.contentId, options);
   }
 
-  #getPath(percent) {
-    const thetaRad = percToRad(percent / 2);
-    const centerX = 0;
-    const centerY = 0;
-    const topX = centerX - (this.#needleLength * Math.cos(thetaRad));
-    const topY = centerY - (this.#needleLength * Math.sin(thetaRad));
-    const leftX = centerX - (this.#needleRadius * Math.cos(thetaRad - halfPI));
-    const leftY = centerY - (this.#needleRadius * Math.sin(thetaRad - halfPI));
-    const rightX = centerX - (this.#needleRadius * Math.cos(thetaRad + halfPI));
-    const rightY = centerY - (this.#needleRadius * Math.sin(thetaRad + halfPI));
-    return `M ${leftX} ${leftY} L ${topX} ${topY} L ${rightX} ${rightY}`;
-  }
-
-  update(percent) {    
-    const self = this;
-    const animationDuration = 1000;
-    this.#targetPercent = percent;
-
-    this.#element.transition()
-      .ease(d3.easeElasticOut.amplitude(1).period(1))
-      .duration(animationDuration)
-      .selectAll('.needle')
-      .tween('progress', function () {
-        const thisElement = this;
-        const delta = percent - self.#currentPercent;
-        const initialPercent = self.#currentPercent;
-        return function (progressPercent) {
-          self.#currentPercent = initialPercent + progressPercent * delta;
-          return d3.select(thisElement)
-            .attr('d', self.#getPath(self.#currentPercent));
-        }
-      });
-  }
-
-  get percent() {
-    return this.#targetPercent;
+  update(data) {
+    this.#gaugeSvg.percent = data;
   }
 }
 
-export default class Gauge {
+class GaugeSvg {
   
   #numSections;
   #numTicks;
@@ -131,7 +86,7 @@ export default class Gauge {
         return arc(this);
       });
 
-    this.#needle = new Needle(this.#chart, this.#radius);
+    this.#needle = new NeedleSvg(this.#chart, this.#radius);
 
     this.#update();
     this.#drawTicks();
@@ -218,3 +173,64 @@ export default class Gauge {
     this.percent = this.#scale(value);
   }  
 }
+
+class NeedleSvg {
+
+  #element;
+  #needleLength;
+  #needleRadius = 4;  
+  #currentPercent = 0;
+  #targetPercent = 0;
+
+  constructor(element, needleLength) {    
+    this.#element = element;
+    this.#needleLength = needleLength;
+
+    this.#element.append('path')
+      .attr('class', 'gauge needle')
+      .attr('d', this.#getPath(this.#targetPercent));
+  }
+
+  #getPath(percent) {
+    const thetaRad = percToRad(percent / 2);
+    const centerX = 0;
+    const centerY = 0;
+    const topX = centerX - (this.#needleLength * Math.cos(thetaRad));
+    const topY = centerY - (this.#needleLength * Math.sin(thetaRad));
+    const leftX = centerX - (this.#needleRadius * Math.cos(thetaRad - halfPI));
+    const leftY = centerY - (this.#needleRadius * Math.sin(thetaRad - halfPI));
+    const rightX = centerX - (this.#needleRadius * Math.cos(thetaRad + halfPI));
+    const rightY = centerY - (this.#needleRadius * Math.sin(thetaRad + halfPI));
+    return `M ${leftX} ${leftY} L ${topX} ${topY} L ${rightX} ${rightY}`;
+  }
+
+  update(percent) {    
+    const self = this;
+    const animationDuration = 1000;
+    this.#targetPercent = percent;
+
+    this.#element.transition()
+      .ease(d3.easeElasticOut.amplitude(1).period(1))
+      .duration(animationDuration)
+      .selectAll('.needle')
+      .tween('progress', function () {
+        const thisElement = this;
+        const delta = percent - self.#currentPercent;
+        const initialPercent = self.#currentPercent;
+        return function (progressPercent) {
+          self.#currentPercent = initialPercent + progressPercent * delta;
+          return d3.select(thisElement)
+            .attr('d', self.#getPath(self.#currentPercent));
+        }
+      });
+  }
+
+  get percent() {
+    return this.#targetPercent;
+  }
+}
+
+const percToDeg = perc => perc * 360;
+const degToRad = deg => (deg * Math.PI) / 180;
+const percToRad = perc => degToRad(percToDeg(perc));
+const halfPI = Math.PI / 2;

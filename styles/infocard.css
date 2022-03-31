@@ -1,0 +1,19 @@
+.bi-gear-fill {
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #ccc;
+    border: 0;
+    background-color: Transparent;
+  }
+
+.bi-gear-fill:hover {
+    color: black;
+}
+
+/* .infocard button {
+  visibility: hidden;
+}
+
+.infocard:hover button {
+  visibility: visible;
+} */
