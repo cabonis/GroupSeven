@@ -2,11 +2,39 @@ import InfoCard from './infocard.js';
 
 export default class Gauge extends InfoCard {
 
+  #daily = "daily-count";
+  #average = "rolling-average";
+
   #gaugeSvg;
+  #config = {isDailyCount: true};
 
   constructor(id, title, options) {
-      super(id, title);
+      super(id, title, () => this.#getSettingsDialog(), (m) => this.#processSettingsUpdate(m));      
       this.#gaugeSvg = new GaugeSvg(this.contentId, options);
+  }
+
+  #getSettingsDialog(){
+
+    const settingsTemplate = `
+      <div class="form-check">
+          <input class="form-check-input" type="radio" name="data-granularity" id="${this.#daily}">
+          <label class="form-check-label" for="${this.#daily}">Daily Count</label>
+      </div>
+      <div class="form-check">
+          <input class="form-check-input" type="radio" name="data-granularity" id="${this.#average}">
+          <label class="form-check-label" for="${this.#average}">7-Day Rolling Average</label>
+      </div>`;
+
+    const currentConfig = this.#config.isDailyCount ? this.#daily : this.#average;
+    
+    const div = document.createElement("div");
+    div.innerHTML = settingsTemplate;   
+    div.querySelector(`#${currentConfig}`).checked = true;
+    return div;
+  }
+  
+  #processSettingsUpdate(modal) {    
+    this.#config.isDailyCount = modal.querySelector(`#${this.#daily}`).checked;
   }
 
   update(data) {
