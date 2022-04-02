@@ -27,7 +27,7 @@
 }
 
 .handle {
-    fill:orange;
+    fill: var(--active-color);
     stroke: #000;
     stroke-opacity: 0.5;
     stroke-width: 1.25px;

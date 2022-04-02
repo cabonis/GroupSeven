@@ -1,3 +1,13 @@
 .barchart.axis {
     font-size: 1em;
 }
+
+.bar {
+    fill: var(--inactive-color);
+    cursor: pointer;
+}
+ 
+
+.bar:hover {
+    fill: var(--active-color);
+}  
