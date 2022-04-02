@@ -70,6 +70,6 @@ class BarChartSvg {
                 .attr("y", d => this.#yScale(d.value))
                 .attr("width", this.#xScale.bandwidth())
                 .attr("height", d => this.#height - this.#yScale(d.value))
-                .attr("class", "feature");
+                .attr("class", "bar");
     }
 }

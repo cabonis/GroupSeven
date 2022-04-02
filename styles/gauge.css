@@ -1,9 +1,9 @@
 [class*="gauge-color"] {
-    fill: #ccc;
+    fill: var(--inactive-color);
 }
 
 [class*="gauge-color"].active {
-    fill: orange;
+    fill: var(--active-color);
 }
 
 .gauge.ticks {

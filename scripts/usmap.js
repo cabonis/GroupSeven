@@ -33,26 +33,37 @@ class UsMapSvg {
         const svg = d3.select("#" + id).append("svg")
             .attr("viewBox", `0, 0, ${width}, ${height}`);
 
-        self.#chart = svg.append("g");
-
-        self.#chart.append("rect")
+        svg.append("rect")
             .attr("class", "background")
             .attr("width", width)
             .attr("height", height)
             .on("click", reset);
 
+        self.#chart = svg.append("g");        
+
         d3.json("./data/us.json").then(us => {
 
-            self.#chart.selectAll("path")
+            self.#chart.append("g")
+                .attr("id", "counties")
+                .selectAll("path")
+                .data(topojson.feature(us, us.objects.counties).features)
+                .enter().append("path")
+                .attr("d", geoPathGenerator)
+                .attr("class", "county-boundary")
+                .on("click", reset);
+
+            self.#chart.append("g")
+                .attr("id", "states")
+                .selectAll("path")
                 .data(topojson.feature(us, us.objects.states).features)
                 .enter().append("path")
                 .attr("d", geoPathGenerator)
-                .attr("class", "feature")
+                .attr("class", "state")
                 .on("click", clicked);
 
             self.#chart.append("path")
                 .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-                .attr("class", "mesh")
+                .attr("id", "state-borders")
                 .attr("d", geoPathGenerator);
         });
 
