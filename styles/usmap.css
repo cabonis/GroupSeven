@@ -29,5 +29,12 @@
 }
 
 .county-boundary:hover, .state:hover {
+  fill: var(--highlight-color);
+}
+
+.hotspot {
   fill: var(--active-color);
+  fill-opacity: .7;
+  stroke: var(--active-color);
+  stroke-width: .5px;
 }
