@@ -1,4 +1,4 @@
-export default class InfoCard {
+export class InfoCard {
 
     constructor(id, title, settingsDialogGenerator = null, settingsProcessor = null) {
 
@@ -34,6 +34,49 @@ export default class InfoCard {
             settingsButton.classList.add("d-none");
         }
     }    
+}
+
+export class ChartSvg {
+    
+    #width;
+    #height;
+    #margin;
+    #chart;
+    #svg
+
+    constructor(id, width, height, margin) {
+
+        this.#svg = d3.select("#" + id)
+            .append("svg")
+            .attr("viewBox", `0, 0, ${width + margin.right + margin.left}, ${height + margin.top + margin.bottom}`); 
+        
+        this.#chart = this.#svg.append("g")
+            .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+        this.#width = width;
+        this.#height = height;
+        this.#margin = margin;
+    }
+
+    get chart() {
+        return this.#chart;
+      }
+
+    get width() {
+        return this.#width;
+    }
+
+    get height() {
+        return this.#height;
+    }
+
+    get margin() {
+        return this.#margin;
+    }
+
+    remove() {
+        this.#svg.remove();
+    }
 }
 
 class Modal {
@@ -78,3 +121,4 @@ class Modal {
         }
     }
 }
+

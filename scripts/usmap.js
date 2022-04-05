@@ -1,5 +1,6 @@
 import EventBus from './eventbus.js'
-import InfoCard from './infocard.js';
+import {InfoCard, ChartSvg} from './framework.js';
+
 
 export default class UsMap extends InfoCard {
 
@@ -15,19 +16,22 @@ export default class UsMap extends InfoCard {
   }
 }
 
-class UsMapSvg {
+class UsMapSvg extends ChartSvg{
 
-    #chart;
+    #map;
     #active;
     #counties;
     #geoGen;
 
     constructor(id) {
-        
-        const self = this;
 
         const width = 1000;
         const height = 500;
+        const margin = {top:0, left: 0, right:0, bottom:0};
+
+        super(id, width, height, margin);
+
+        var self = this;
 
         self.#active = d3.select(null);
 
@@ -36,16 +40,13 @@ class UsMapSvg {
                 .scale(width)
                 .translate([width / 2, height / 2]));
 
-        const svg = d3.select("#" + id).append("svg")
-            .attr("viewBox", `0, 0, ${width}, ${height}`);
-
-        svg.append("rect")
+        this.chart.append("rect")
             .attr("class", "background")
             .attr("width", width)
             .attr("height", height)
             .on("click", reset);
 
-        self.#chart = svg.append("g");        
+        this.#map = this.chart.append("g");        
 
         d3.json("./data/us.json").then(us => {
 
@@ -56,7 +57,7 @@ class UsMapSvg {
                 return map;
             }, {});
 
-            self.#chart.append("g")
+            self.#map.append("g")
                 .attr("id", "counties")
                 .selectAll("path")
                 .data(counties)    
@@ -65,7 +66,7 @@ class UsMapSvg {
                 .attr("class", "county-boundary")
                 .on("click", reset);
 
-            self.#chart.append("g")
+            self.#map.append("g")
                 .attr("id", "states")
                 .selectAll("path")
                 .data(topojson.feature(us, us.objects.states).features)
@@ -74,7 +75,7 @@ class UsMapSvg {
                 .attr("class", "state")
                 .on("click", clicked);
 
-            self.#chart.append("g").append("path")
+            self.#map.append("g").append("path")
                 .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
                 .attr("id", "state-borders")
                 .attr("d", this.#geoGen);
@@ -83,8 +84,8 @@ class UsMapSvg {
         const zoom = d3.zoom()
             .scaleExtent([1, 8])
             .on("zoom", () => {
-                self.#chart.style("stroke-width", 1.5 / d3.event.transform.k + "px");
-                self.#chart.attr("transform", d3.event.transform);
+                self.#map.style("stroke-width", 1.5 / d3.event.transform.k + "px");
+                self.#map.attr("transform", d3.event.transform);
         });
 
         function clicked(d) {
@@ -102,7 +103,7 @@ class UsMapSvg {
                     scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height))),
                     translate = [width / 2 - scale * x, height / 2 - scale * y];
         
-                self.#chart.transition()
+                self.#map.transition()
                     .duration(750)
                     .call( zoom.transform, d3.zoomIdentity.translate(translate[0],translate[1]).scale(scale) );
 
@@ -113,7 +114,7 @@ class UsMapSvg {
             
             self.#active.classed("active", false);
             self.#active = d3.select(null);        
-            self.#chart.transition()
+            self.#map.transition()
                     .duration(750)
                     .call( zoom.transform, d3.zoomIdentity );
             EventBus.publish("ContextChanged", 0);
@@ -129,7 +130,7 @@ class UsMapSvg {
 
         hotspotIds = hotspotIds.filter(h => h < continentalUsCutoff);
         
-        this.#chart.selectAll("circle")
+        this.#map.selectAll("circle")
             .data(hotspotIds, d => d)            
             .join(enter => enter.append("circle")
                                 .attr("class", "hotspot")
