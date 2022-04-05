@@ -1,4 +1,4 @@
-import InfoCard from './infocard.js';
+import {InfoCard, ChartSvg} from './framework.js';
 
 export default class Gauge extends InfoCard {
 
@@ -42,7 +42,7 @@ export default class Gauge extends InfoCard {
   }
 }
 
-class GaugeSvg {
+class GaugeSvg extends ChartSvg {
   
   #numSections;
   #numTicks;
@@ -65,6 +65,8 @@ class GaugeSvg {
     const height = 100;
     const margin = {top: 40, right: 20, bottom: 5, left: 20};
 
+    super(id, width, height, margin);
+
     const barWidth = 25;
     const barInset = 0;
     const sectionsPadding = .05;
@@ -77,17 +79,11 @@ class GaugeSvg {
     this.percent = 0;
     this.interval = options.interval;
 
-    const viewboxWidth = width + margin.right + margin.left;
-    const viewboxHeight = height + margin.top + margin.bottom;
+    this.#ticks = this.chart.append('g')
+    .attr('transform', `translate(${width / 2}, ${height})`);
 
-    const svg = d3.select("#" + id).append("svg")
-      .attr("viewBox", `0, 0, ${viewboxWidth}, ${viewboxHeight}`);
-
-    this.#ticks = svg.append('g')
-      .attr('transform', `translate(${viewboxWidth / 2}, ${height + margin.top})`);
-
-    this.#chart = svg.append('g')
-      .attr('transform', `translate(${viewboxWidth / 2}, ${height + margin.top})`);
+    this.#chart = this.chart.append('g')
+      .attr('transform', `translate(${width / 2}, ${height})`);
 
     const sectionPercentage = 1 / this.#numSections / 2;
     let cumulativePercent = 0.75;

@@ -1,11 +1,12 @@
 import EventBus from './eventbus.js'
+import { ChartSvg } from './framework.js';
 
 const formatMonthYear = d3.timeFormat("%b %Y");
 const formatMonthDayYear = d3.timeFormat("%b %d, %Y");  
 
-export default class Slider{
+export default class Slider extends ChartSvg{
     
-    #chart;
+    #slider;
     #xScale;
     #handle;
     #label;
@@ -20,9 +21,7 @@ export default class Slider{
         const height = 75;
         const margin = {top: 0, right: 50, bottom: 0, left: 50};        
 
-        const svg = d3.select("#" + id)
-            .append("svg")
-            .attr("viewBox", `0, 0, ${width + margin.right + margin.left}, ${height + margin.top + margin.bottom}`);  
+        super(id, width, height, margin);
 
         var currentValue = 0;
     
@@ -31,11 +30,11 @@ export default class Slider{
             .range([0, width])
             .clamp(true);
 
-        this.#chart = svg.append("g")
+        this.#slider = this.chart.append("g")
             .attr("class", "slider")
-            .attr("transform", "translate(" + margin.left + "," + height/2 + ")");
+            .attr("transform", `translate(0, ${height/2})`);
 
-        this.#chart.append("line")
+        this.#slider.append("line")
             .attr("class", "track")
             .attr("x1", this.#xScale.range()[0])
             .attr("x2", this.#xScale.range()[1])
@@ -44,22 +43,22 @@ export default class Slider{
             .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
             .attr("class", "track-overlay")
             .call(d3.drag()
-                .on("start.interrupt", () => this.#chart.interrupt())
+                .on("start.interrupt", () => this.#slider.interrupt())
                 .on("start drag", () => {
                     currentValue = d3.event.x;
                     this.#updateTimeFocus(this.#xScale.invert(currentValue)); 
                 })
             );
 
-        this.#legend = this.#chart.append("g", ".track-overlay")
+        this.#legend = this.#slider.append("g", ".track-overlay")
             .attr("class", "slider ticks")
             .attr("transform", "translate(0," + 18 + ")")
 
-        this.#handle = this.#chart.insert("circle", ".track-overlay")
+        this.#handle = this.#slider.insert("circle", ".track-overlay")
             .attr("class", "handle")
             .attr("r", 9);
 
-        this.#label = this.#chart.append("text")  
+        this.#label = this.#slider.append("text")  
             .attr("class", "label")
             .attr("text-anchor", "middle")
             .text(formatMonthDayYear(defaultStartDate))
