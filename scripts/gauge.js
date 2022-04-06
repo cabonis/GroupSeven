@@ -110,7 +110,7 @@ class GaugeSvg extends ChartSvg {
         return arc(this);
       });
 
-    this.#needle = new NeedleSvg(this.#chart, this.#radius);
+    this.#needle = new NeedleSvg(this.#chart, this.#radius, this.animationDuration);
 
     this.#update();
     this.#drawTicks();
@@ -202,13 +202,15 @@ class NeedleSvg {
 
   #element;
   #needleLength;
+  #animationDuration
   #needleRadius = 4;  
   #currentPercent = 0;
   #targetPercent = 0;
 
-  constructor(element, needleLength) {    
+  constructor(element, needleLength, animationDuration) {    
     this.#element = element;
     this.#needleLength = needleLength;
+    this.#animationDuration = animationDuration;
 
     this.#element.append('path')
       .attr('class', 'gauge needle')
@@ -230,12 +232,11 @@ class NeedleSvg {
 
   update(percent) {    
     const self = this;
-    const animationDuration = 1000;
     this.#targetPercent = percent;
 
     this.#element.transition()
       .ease(d3.easeElasticOut.amplitude(1).period(1))
-      .duration(animationDuration)
+      .duration(this.#animationDuration)
       .selectAll('.needle')
       .tween('progress', function () {
         const thisElement = this;

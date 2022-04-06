@@ -104,7 +104,7 @@ class UsMapSvg extends ChartSvg{
                     translate = [width / 2 - scale * x, height / 2 - scale * y];
         
                 self.#map.transition()
-                    .duration(750)
+                    .duration(self.animationDuration)
                     .call( zoom.transform, d3.zoomIdentity.translate(translate[0],translate[1]).scale(scale) );
 
                 EventBus.publish("ContextChanged", d.id);
@@ -115,7 +115,7 @@ class UsMapSvg extends ChartSvg{
             self.#active.classed("active", false);
             self.#active = d3.select(null);        
             self.#map.transition()
-                    .duration(750)
+                    .duration(self.animationDuration)
                     .call( zoom.transform, d3.zoomIdentity );
             EventBus.publish("ContextChanged", 0);
         }
@@ -136,10 +136,10 @@ class UsMapSvg extends ChartSvg{
                                 .attr("class", "hotspot")
                                 .call(enter => enter.attr("transform", (d) => `translate(${this.#geoGen.centroid(this.#counties[d])})`)
                                     .transition()
-                                    .duration(400)
+                                    .duration(this.animationDuration / 2)
                                     .attr("r", 12)
                                     .transition()
-                                    .duration(400)
+                                    .duration(this.animationDuration / 2)
                                     .attr("r", 6)));
     } 
 }

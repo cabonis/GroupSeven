@@ -43,6 +43,7 @@ export class ChartSvg {
     #margin;
     #chart;
     #svg;
+    #animationDuration = 500;
 
     constructor(id, width, height, margin) {
 
@@ -72,6 +73,10 @@ export class ChartSvg {
 
     get margin() {
         return this.#margin;
+    }
+
+    get animationDuration() {
+        return this.#animationDuration;
     }
 
     remove() {
