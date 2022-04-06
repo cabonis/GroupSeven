@@ -27,44 +27,64 @@ export default class TimeControl {
     }
 }
 
+class StepSize {
+
+    static Day = new StepSize("day");
+    static Week = new StepSize("week");
+    static Month = new StepSize("month");
+    
+    constructor(name) {
+        this.Name = name;
+    }
+}
+
 class PlayPause {
 
     #isPlaying = false;
+    #stepSize = StepSize.Day;
     #slider;
     #timer;
     #playBtn;
 
     constructor(id, slider){
 
-        const playButton = "playpause";
+        const playBtnId = "play-pause";
+        const configBtnId = "play-config";
+        const configFormId = "play-config-form";
 
         const playPauseTemplate = `
         <div class="btn-group">
-            <button type="button" class="bi-play-fill" id="${playButton}"></button>
+            <button type="button" class="bi-play-fill" id="${playBtnId}"></button>
+            <button type="button" class="bi-gear-fill dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" id="${configBtnId}"></button>      
+            <div class="dropdown-menu dropdown-menu-end">
+                <form class="px-3 py-1" id="${configFormId}">              
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="playspeed" id="playspeed-day" value="${StepSize.Day.Name}" checked>
+                        <label class="form-check-label" for="playspeed-day">1 Day/sec</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="playspeed" id="playspeed-week" value="${StepSize.Week.Name}">
+                        <label class="form-check-label" for="playspeed-week">1 Week/sec</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="playspeed" id="playspeed-month" value="${StepSize.Month.Name}">
+                        <label class="form-check-label" for="playspeed-month">1 Month/sec</label>
+                    </div>
+                </form>
+            </div>            
         </div>
         `;
-
-        // const playPauseTemplate = `
-        // <div class="btn-group">
-        //     <button type="button" class="bi-play-fill" id="${playButton}"></button>
-        //     <button type="button" class="bi-gear-fill dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>      
-        //     <ul class="dropdown-menu dropdown-menu-end">
-        //         <li><h6 class="dropdown-header">Play Speed</h6></li>
-        //         <li><hr class="dropdown-divider"></li>
-        //         <li><a class="dropdown-item" href="#">1 Day/sec</a></li>
-        //         <li><a class="dropdown-item active" href="#">7 Days/sec</a></li>
-        //         <li><a class="dropdown-item" href="#">28 Days/sec</a></li>
-        //     </ul>
-        // </div>
-        // `;
 
         const div = document.createElement("div");
         div.innerHTML = playPauseTemplate;
         document.getElementById(id).appendChild(div);
 
         this.#slider = slider;
-        this.#playBtn = document.getElementById(playButton);
+        this.#playBtn = document.getElementById(playBtnId);
         this.#playBtn.addEventListener("click", () => this.#playPauseClicked());
+
+        const configForm = document.getElementById(configFormId);
+        configForm.addEventListener("change", (e) => this.#configChanged(e));
     }
 
     #playPauseClicked() {
@@ -85,8 +105,25 @@ class PlayPause {
         }
     }
 
+    #configChanged(e) {
+        
+        switch(e.target.value) {
+            case StepSize.Day.Name:
+                this.#stepSize = StepSize.Day;
+                break;
+            case StepSize.Week.Name:
+                this.#stepSize = StepSize.Week;
+                break;
+            case StepSize.Month.Name:
+                this.#stepSize = StepSize.Month;
+                break;
+            default:
+                break;
+        }
+    }
+
     #updateSlider() {
-        this.#slider.step(1);
+        this.#slider.step(this.#stepSize);
     }
 }
 
@@ -173,13 +210,26 @@ class SliderSvg extends ChartSvg{
             .text((d) => formatMonthYear(d));
     }
 
-    step(num){
+    step(stepSize){
         const timelineEnd = this.#xScale.domain()[1].getTime();
         let date = new Date(this.#currentDate.valueOf());
 
         if(date.getTime() == timelineEnd) { return; }
 
-        date.setDate(date.getDate() + num);
+        switch(stepSize) {
+            case StepSize.Day:
+                date.setDate(date.getDate() + 1);
+                break;
+            case StepSize.Week:
+                date.setDate(date.getDate() + 7);
+                break;
+            case StepSize.Month:
+                date.setMonth(date.getMonth() + 1);
+                break;
+            default:
+                break;                
+        }
+        
         if(date.getTime() > timelineEnd) { date = timelineEnd; }
         this.#updateTimeFocus(date);
     }
