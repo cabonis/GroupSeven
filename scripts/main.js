@@ -5,7 +5,7 @@ import Chart from './chart.js';
 import TestDataProvider from './dataprovider.js';
 
 let uiElements = {};
-uiElements.timecontrol = new TimeControl("date-slider");
+uiElements.timecontrol = new TimeControl("slider", "nav");
 uiElements.map = new UsMap("hotspots", "Hot Spots");
 uiElements.chart = new Chart("vaccinations", "Vaccinations");
 uiElements.gauges = [

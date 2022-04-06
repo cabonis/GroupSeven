@@ -7,10 +7,20 @@ const formatMonthDayYear = d3.timeFormat("%b %d, %Y");
 export default class TimeControl {
 
     #slider;
+    #playPause;
 
-    constructor(id){
-        this.#slider = new SliderSvg(id);
-        new PlayPause(this.#slider);
+    constructor(sliderId, playPauseId){      
+
+        const sliderControl = `${sliderId}-control`;
+        const sliderTemplate = `<div class="card py-4" id="${sliderControl}"></div>`;
+
+        const div = document.createElement("div");
+        div.innerHTML = sliderTemplate;
+        document.getElementById(sliderId).appendChild(div);
+
+
+        this.#slider = new SliderSvg(sliderControl);
+        this.#playPause = new PlayPause(playPauseId, this.#slider);
     }
 
     updateTimeRange(range){
@@ -23,28 +33,55 @@ class PlayPause {
     #isPlaying = false;
     #slider;
     #timer;
+    #playBtn;
 
-    constructor(slider){
+    constructor(id, slider){
 
-        this.#slider = slider;        
-        let playBtn = document.getElementById("playpause");
+        const playButton = "playpause";
 
-        playBtn.addEventListener("click", () =>{
-            if(!this.#isPlaying) {
-                playBtn.classList.remove("bi-play-fill");
-                playBtn.classList.add("bi-pause-fill");
-                this.#slider.toggleEnabled(false);
-                this.#timer = setInterval(this.#slider.step(1), 1000);
-                this.#isPlaying = true;
-            }
-            else {
-                playBtn.classList.remove("bi-pause-fill");
-                playBtn.classList.add("bi-play-fill");
-                this.#slider.toggleEnabled(true)
-                clearInterval(this.#timer);
-                this.#isPlaying = false;
-            }
-        })
+        const playPauseTemplate = `
+        <div class="btn-group">
+            <button type="button" class="bi-play-fill" id="${playButton}"></button>
+            <button type="button" class="bi-gear-fill dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>      
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><h6 class="dropdown-header">Play Speed</h6></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">1 Day/sec</a></li>
+                <li><a class="dropdown-item active" href="#">7 Days/sec</a></li>
+                <li><a class="dropdown-item" href="#">28 Days/sec</a></li>
+            </ul>
+        </div>
+        `;
+
+        const div = document.createElement("div");
+        div.innerHTML = playPauseTemplate;
+        document.getElementById(id).appendChild(div);
+
+        this.#slider = slider;
+        this.#playBtn = document.getElementById(playButton);
+        this.#playBtn.addEventListener("click", () => this.#playPauseClicked());
+    }
+
+    #playPauseClicked() {
+        
+        if(!this.#isPlaying) {
+            this.#playBtn.classList.remove("bi-play-fill");
+            this.#playBtn.classList.add("bi-pause-fill");
+            this.#slider.toggleEnabled(false);
+            this.#timer = setInterval(() => this.#updateSlider(), 1000);
+            this.#isPlaying = true;
+        }
+        else {
+            this.#playBtn.classList.remove("bi-pause-fill");
+            this.#playBtn.classList.add("bi-play-fill");
+            this.#slider.toggleEnabled(true)
+            clearInterval(this.#timer);
+            this.#isPlaying = false;
+        }
+    }
+
+    #updateSlider() {
+        this.#slider.step(1);
     }
 }
 
