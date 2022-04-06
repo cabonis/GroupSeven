@@ -1,4 +1,4 @@
-import EventBus from './eventbus.js'
+import {EventBus} from './framework.js';
 
 class DataProvider {
 

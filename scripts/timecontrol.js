@@ -1,5 +1,4 @@
-import EventBus from './eventbus.js'
-import { ChartSvg } from './framework.js';
+import { ChartSvg, EventBus } from './framework.js';
 
 const formatMonthYear = d3.timeFormat("%b %Y");
 const formatMonthDayYear = d3.timeFormat("%b %d, %Y");  

@@ -1,5 +1,4 @@
-import EventBus from './eventbus.js'
-import {InfoCard, ChartSvg} from './framework.js';
+import {InfoCard, ChartSvg, EventBus} from './framework.js';
 
 
 export default class UsMap extends InfoCard {
