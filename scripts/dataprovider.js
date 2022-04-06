@@ -1,4 +1,4 @@
-import EventBus from './eventbus.js'
+import {EventBus} from './framework.js';
 
 class DataProvider {
 
@@ -55,7 +55,7 @@ export default class TestDataProvider {
             const counties = topojson.feature(us, us.objects.counties).features;
             counties.forEach(c => this.#counties.push(c.id));
 
-            this.#uiElements.slider.updateTimeRange([new Date(Date.parse("2020-01-01T00:00:00")), new Date()]);
+            this.#uiElements.timecontrol.updateTimeRange([new Date(Date.parse("2020-01-01T00:00:00")), new Date()]);
 
             this.#pushRandomData();
 

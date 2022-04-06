@@ -123,16 +123,16 @@ class BarChartSvg extends ChartSvg {
 
     update(data) {
         this.#xScale.domain(data.map(d => d.name));
-        this.xAxis.transition().duration(1000).call(d3.axisBottom(this.#xScale));
+        this.xAxis.transition().duration(this.animationDuration).call(d3.axisBottom(this.#xScale));
 
         this.#yScale.domain([0, d3.max(data, d => +d.value)]);
-        this.yAxis.transition().duration(1000).call(d3.axisLeft(this.#yScale));
+        this.yAxis.transition().duration(this.animationDuration).call(d3.axisLeft(this.#yScale));
 
         this.chart.selectAll("rect")
             .data(data)
             .join("rect")
             .transition()
-            .duration(1000)
+            .duration(this.animationDuration)
                 .attr("x", d => this.#xScale(d.name))
                 .attr("y", d => this.#yScale(d.value))
                 .attr("width", this.#xScale.bandwidth())

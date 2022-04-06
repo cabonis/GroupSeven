@@ -1,0 +1,68 @@
+.slider.ticks {
+    font-size: .8em;
+  }
+
+.track,
+.track-inset,
+.track-overlay {
+    stroke-linecap: round;
+}
+
+.track {
+    stroke: #000;
+    stroke-opacity: 0.3;
+    stroke-width: 10px;
+}
+
+.track-inset {
+    stroke: var(--inactive-color);
+    stroke-width: 8px;
+}
+
+.track-inset.inactive {
+    stroke: white;
+    cursor: not-allowed;
+}
+
+.track-overlay {
+    pointer-events: stroke;
+    stroke-width: 50px;
+    stroke: transparent;
+    cursor: pointer;
+}
+
+.track-overlay.inactive {
+    pointer-events:none;
+    cursor: not-allowed;
+}
+
+.handle {
+    fill: var(--active-color);
+    stroke: #000;
+    stroke-opacity: 0.5;
+    stroke-width: 1.25px;
+}
+
+.handle.inactive {
+    fill: var(--inactive-color);
+    cursor: not-allowed;
+}
+
+.bi-play-fill {
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #ccc;
+    border: 0;
+    background-color: Transparent;
+}
+
+.bi-play-fill:hover {
+  color: black;
+}
+
+.bi-pause-fill {
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: black;
+    background-color: Transparent;
+}

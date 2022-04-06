@@ -1,11 +1,11 @@
-import Slider from './slider.js';
+import TimeControl from './timecontrol.js';
 import UsMap from './usmap.js'; 
 import Gauge from './gauge.js'; 
 import Chart from './chart.js';
 import TestDataProvider from './dataprovider.js';
 
 let uiElements = {};
-uiElements.slider = new Slider("date-slider");
+uiElements.timecontrol = new TimeControl("slider", "nav");
 uiElements.map = new UsMap("hotspots", "Hot Spots");
 uiElements.chart = new Chart("vaccinations", "Vaccinations");
 uiElements.gauges = [

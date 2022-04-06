@@ -42,7 +42,8 @@ export class ChartSvg {
     #height;
     #margin;
     #chart;
-    #svg
+    #svg;
+    #animationDuration = 500;
 
     constructor(id, width, height, margin) {
 
@@ -60,7 +61,7 @@ export class ChartSvg {
 
     get chart() {
         return this.#chart;
-      }
+    }           
 
     get width() {
         return this.#width;
@@ -72,6 +73,10 @@ export class ChartSvg {
 
     get margin() {
         return this.#margin;
+    }
+
+    get animationDuration() {
+        return this.#animationDuration;
     }
 
     remove() {
@@ -119,6 +124,29 @@ class Modal {
             modal.dispose();
             div.remove();
         }
+    }
+}
+
+export class EventBus {
+
+    static #subscriptions = {}
+
+    static subscribe(eventType, callback) {
+
+        if(!this.#subscriptions[eventType]) {
+            this.#subscriptions[eventType] = [];
+        }
+
+        this.#subscriptions[eventType].push(callback);
+    }
+
+    static publish(eventType, arg) {
+
+        if(!this.#subscriptions[eventType]) {
+            return;
+        }
+
+        Object.values(this.#subscriptions[eventType]).forEach(callback => callback(arg));
     }
 }
 

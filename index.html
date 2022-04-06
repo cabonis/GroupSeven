@@ -10,19 +10,17 @@
 </head>
 <body>
   
-  <nav class="navbar navbar-light bg-light p-3">
+  <nav class="navbar navbar-light bg-light p-3" id="nav">
     <div class="d-flex col-12 col-md-3 col-lg-2 mb-2 mb-lg-0 flex-wrap flex-md-nowrap justify-content-between">
         <a class="navbar-brand" href="#">COVID Visualization Dashboard</a>        
     </div>
-  </nav>
+  </nav>  
   
   <div class="container-xl">
     <div class="row">
         <main class="col px-md-4 py-4">
           <div class="row">
-            <div class="col">
-              <div class="card py-4" id="date-slider"></div>
-            </div>
+            <div class="col" id="slider"></div>
           </div>          
           <div class="row my-4">
             <div class="col-3" id="cases"></div>    
@@ -37,19 +35,6 @@
         </main>
     </div>
   </div>
-
-  <!-- <div class="row my-4">
-            <div class="col">
-              <div class="card">
-                  <h5 class="card-header">Some Graph</h5>
-                  <div class="card-body">
-                    <h5 class="card-title">64k</h5>
-                    <p class="card-text">Feb 1 - Apr 1, United States</p>
-                    <p class="card-text text-success">2.5% increase since last month</p>
-                  </div>
-                </div>
-          </div> -->
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
