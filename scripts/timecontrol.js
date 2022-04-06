@@ -41,16 +41,22 @@ class PlayPause {
         const playPauseTemplate = `
         <div class="btn-group">
             <button type="button" class="bi-play-fill" id="${playButton}"></button>
-            <button type="button" class="bi-gear-fill dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>      
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li><h6 class="dropdown-header">Play Speed</h6></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">1 Day/sec</a></li>
-                <li><a class="dropdown-item active" href="#">7 Days/sec</a></li>
-                <li><a class="dropdown-item" href="#">28 Days/sec</a></li>
-            </ul>
         </div>
         `;
+
+        // const playPauseTemplate = `
+        // <div class="btn-group">
+        //     <button type="button" class="bi-play-fill" id="${playButton}"></button>
+        //     <button type="button" class="bi-gear-fill dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>      
+        //     <ul class="dropdown-menu dropdown-menu-end">
+        //         <li><h6 class="dropdown-header">Play Speed</h6></li>
+        //         <li><hr class="dropdown-divider"></li>
+        //         <li><a class="dropdown-item" href="#">1 Day/sec</a></li>
+        //         <li><a class="dropdown-item active" href="#">7 Days/sec</a></li>
+        //         <li><a class="dropdown-item" href="#">28 Days/sec</a></li>
+        //     </ul>
+        // </div>
+        // `;
 
         const div = document.createElement("div");
         div.innerHTML = playPauseTemplate;
