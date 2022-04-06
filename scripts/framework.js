@@ -42,7 +42,7 @@ export class ChartSvg {
     #height;
     #margin;
     #chart;
-    #svg
+    #svg;
 
     constructor(id, width, height, margin) {
 
@@ -60,7 +60,7 @@ export class ChartSvg {
 
     get chart() {
         return this.#chart;
-      }
+    }           
 
     get width() {
         return this.#width;

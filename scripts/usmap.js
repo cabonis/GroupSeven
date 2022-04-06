@@ -41,7 +41,7 @@ class UsMapSvg extends ChartSvg{
                 .translate([width / 2, height / 2]));
 
         this.chart.append("rect")
-            .attr("class", "background")
+            .attr("class", "map-background")
             .attr("width", width)
             .attr("height", height)
             .on("click", reset);
