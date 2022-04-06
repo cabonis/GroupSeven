@@ -174,9 +174,14 @@ class SliderSvg extends ChartSvg{
     }
 
     step(num){
-        const copy = new Date(Number(this.#currentDate));
-        copy.setDate(this.#currentDate.getDate() + num);
-        this.#updateTimeFocus(copy);
+        const timelineEnd = this.#xScale.domain()[1].getTime();
+        let date = new Date(this.#currentDate.valueOf());
+
+        if(date.getTime() == timelineEnd) { return; }
+
+        date.setDate(date.getDate() + num);
+        if(date.getTime() > timelineEnd) { date = timelineEnd; }
+        this.#updateTimeFocus(date);
     }
 
     toggleEnabled(isEnabled) {
