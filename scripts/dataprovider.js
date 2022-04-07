@@ -10,6 +10,7 @@ export default class TestDataProvider {
     #uiElements;
     #counties = [];
     #hotspots = [];
+    #gauges = [];
 
     constructor(uiElements) {
         this.#uiElements = uiElements;
@@ -24,12 +25,33 @@ export default class TestDataProvider {
         return rand;
     }
 
-    #randomGaugeData() {
-        const value = Math.random();
-        const multiplier = this.#randomNumber(.85, 1.15, false);
+    #randomizeGaugeData(i) {
+
+        const lastValue = this.#gauges[i];
+        let newValue = 0;
+
+        if(lastValue) {
+            const valueDelta = this.#randomNumber(0, .1, false);
+            const sign = (this.#randomNumber(0, 1) >= .5) ? 1 : -1;
+            newValue = lastValue + (valueDelta * sign);
+            
+            if(newValue > 1) {
+                newValue = 1;
+            }
+            if(newValue < 0) {
+                newValue = 0;
+            }
+        }
+        else {
+            newValue = Math.random();
+        }
+
+        this.#gauges[i] = newValue;
+
+        const averageMultiplier = this.#randomNumber(.9, 1.1, false);
         return {
-            daily: value,
-            average: value * multiplier
+            daily: newValue,
+            average: newValue * averageMultiplier
         }
     }
 
@@ -61,7 +83,7 @@ export default class TestDataProvider {
     #pushRandomData(){
         this.#uiElements.map.update(this.#randomizeHotspots());
         this.#uiElements.chart.update(this.#randomBarData());
-        this.#uiElements.gauges.forEach(g => g.update(this.#randomGaugeData()));
+        this.#uiElements.gauges.forEach((g, i) => g.update(this.#randomizeGaugeData(i)));
     }
 
     initialize() {
