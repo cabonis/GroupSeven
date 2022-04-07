@@ -28,7 +28,7 @@ export default class Gauge extends InfoCard {
       const contentTemplate = `
       <div class="row">
         <div class="col-10"><span class="gauge label" id="${labelId}" title="${this.#dailyText}"></span></div>
-        <div class="col-2"><span class="${this.#dailyClass}" id="${iconId}"></span></div>
+        <div class="col-2"><span class="${this.#dailyClass}" id="${iconId}" title="${this.#dailyText}"></span></div>
       </div>
       <div class="row">
         <div class="col-12" id="${svgId}"></div>
@@ -72,12 +72,12 @@ export default class Gauge extends InfoCard {
     this.#config.isDailyCount = modal.querySelector(`#${this.#dailyId}`).checked;
 
     if(this.#config.isDailyCount){
-      this.#label.title = this.#dailyText;
+      this.#label.title = this.#icon.title = this.#dailyText;
       this.#icon.classList.remove(this.#averageClass);
       this.#icon.classList.add(this.#dailyClass);
     }
     else {
-      this.#label.title = this.#averageText;
+      this.#label.title = this.#icon.title = this.#averageText;
       this.#icon.classList.remove(this.#dailyClass);
       this.#icon.classList.add(this.#averageClass);
     }
