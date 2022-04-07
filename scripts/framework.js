@@ -10,7 +10,7 @@ export class InfoCard {
             <div class="card-header py-0">
                 <div class="row">
                     <div class="col-10 pt-1">
-                        <h5>${title}</h5>
+                        <h6>${title}</h6>
                     </div>
                     <div class="col-2 p-0">
                         <button class="bi-gear-fill float-end" id="${settingsId}"></button>

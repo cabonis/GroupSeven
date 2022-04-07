@@ -9,5 +9,5 @@
  
 
 .bar:hover {
-    fill: var(--active-color);
+    fill: var(--theme-color);
 }  

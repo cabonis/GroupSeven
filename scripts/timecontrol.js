@@ -54,8 +54,8 @@ class PlayPause {
 
         const playPauseTemplate = `
         <div class="btn-group">
-            <button type="button" class="bi-play-fill" id="${playBtnId}"></button>
-            <button type="button" class="bi-gear-fill dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" id="${configBtnId}"></button>      
+            <button type="button" class="playpause bi-play-fill" id="${playBtnId}"></button>
+            <button type="button" class="playpause bi-gear-fill dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" id="${configBtnId}"></button>      
             <div class="dropdown-menu dropdown-menu-end">
                 <form class="px-3 py-1" id="${configFormId}">              
                     <div class="form-check">

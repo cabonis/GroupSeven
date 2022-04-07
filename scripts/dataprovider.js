@@ -15,6 +15,24 @@ export default class TestDataProvider {
         this.#uiElements = uiElements;
     }
 
+    #randomNumber(min, max, round = true) {
+        const rand = Math.random() * (max - min) + min;
+        if(round) {
+            return Math.round(rand);
+        }
+
+        return rand;
+    }
+
+    #randomGaugeData() {
+        const value = Math.random();
+        const multiplier = this.#randomNumber(.85, 1.15, false);
+        return {
+            daily: value,
+            average: value * multiplier
+        }
+    }
+
     #randomBarData() {
         return [
             {name:"1st Dose", value: Math.random() * 100},
@@ -24,18 +42,16 @@ export default class TestDataProvider {
     }
 
     #randomizeHotspots() {
-
-        let randomNumber = (min, max) => Math.round(Math.random() * (max - min) + min);
     
-        let hotSpotsToAdd = randomNumber(0, 25);
-        let hotSpotsToRemove = randomNumber(0, this.#hotspots.length)
+        let hotSpotsToAdd = this.#randomNumber(0, 25);
+        let hotSpotsToRemove = this.#randomNumber(0, this.#hotspots.length)
 
         for(let i = 0; i < hotSpotsToRemove; i++) {
             this.#hotspots.shift();
         }
 
         for(let i = 0; i < hotSpotsToAdd; i++) {
-            let id = randomNumber(0, this.#counties.length - 1);
+            let id = this.#randomNumber(0, this.#counties.length - 1);
             this.#hotspots.push(this.#counties[id]);
         }
 
@@ -45,7 +61,7 @@ export default class TestDataProvider {
     #pushRandomData(){
         this.#uiElements.map.update(this.#randomizeHotspots());
         this.#uiElements.chart.update(this.#randomBarData());
-        this.#uiElements.gauges.forEach(g => g.update(Math.random()));
+        this.#uiElements.gauges.forEach(g => g.update(this.#randomGaugeData()));
     }
 
     initialize() {
