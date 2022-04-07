@@ -21,6 +21,7 @@ class UsMapSvg extends ChartSvg{
     #active;
     #counties;
     #geoGen;
+    #fips;
 
     constructor(id) {
 
@@ -31,7 +32,6 @@ class UsMapSvg extends ChartSvg{
         super(id, width, height, margin);
 
         var self = this;
-
         self.#active = d3.select(null);
 
         self.#geoGen = d3.geoPath()
@@ -45,9 +45,18 @@ class UsMapSvg extends ChartSvg{
             .attr("height", height)
             .on("click", reset);
 
-        this.#map = this.chart.append("g");        
+        this.#map = this.chart.append("g");      
+        
+        Promise.all([
+            d3.json("./data/us.json"),
+            d3.csv("./data/fips-by-state.csv")
+        ]).then(data => {
 
-        d3.json("./data/us.json").then(us => {
+            const us = data[0];
+            this.#fips = data[1].reduce((map, obj) => {
+                map[obj.fips] = `${obj.name}, ${obj.state}`;
+                return map;
+            }, {});
 
             const counties = topojson.feature(us, us.objects.counties).features;
 
@@ -132,13 +141,16 @@ class UsMapSvg extends ChartSvg{
         this.#map.selectAll("circle")
             .data(hotspotIds, d => d)            
             .join(enter => enter.append("circle")
-                                .attr("class", "hotspot")
+                                .attr("class", "hotspot")                                
                                 .call(enter => enter.attr("transform", (d) => `translate(${this.#geoGen.centroid(this.#counties[d])})`)
                                     .transition()
                                     .duration(this.animationDuration / 2)
                                     .attr("r", 12)
                                     .transition()
                                     .duration(this.animationDuration / 2)
-                                    .attr("r", 6)));
+                                    .attr("r", 6)))
+                                    .append("svg:title")
+                                    .text((d) => this.#fips[d]);                            
+                                    
     } 
 }
