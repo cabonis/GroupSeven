@@ -5,9 +5,10 @@
   @import 'usmap.css';
 
   :root {
+    --active-color: #919191;
     --inactive-color: #ccc;
-    --highlight-color: #e2e2e2;
-    --active-color: orange;
+    --highlight-color: #ececec;
+    --theme-color: orange;
   }
   
   .navbar {

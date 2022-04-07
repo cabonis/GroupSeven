@@ -1,3 +1,7 @@
+.card-header {
+  background-color: var(--highlight-color);
+}
+
 .bi-gear-fill {
     font-size: 1.2rem;
     cursor: pointer;
