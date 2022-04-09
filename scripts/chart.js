@@ -58,7 +58,7 @@ export default class Chart extends InfoCard {
     }
 
     if(isUpdated) {
-        this.#config.isBar = isBar;
+        this.#config.isBar != isBar;
         this.#chart.update(this.#lastData);
     }    
   }
