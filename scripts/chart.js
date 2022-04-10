@@ -13,7 +13,7 @@ export default class Chart extends InfoCard {
 
       super(id, title, () => this.#getSettingsDialog(), (m) => this.#processSettingsUpdate(m));
 
-      this.#config.isBar != isBar;
+      this.#config.isBar = isBar;
 
       if(isBar){
           this.#chart = new BarChartSvg(this.contentId);
@@ -58,7 +58,7 @@ export default class Chart extends InfoCard {
     }
 
     if(isUpdated) {
-        this.#config.isBar != isBar;
+        this.#config.isBar = isBar;
         this.#chart.update(this.#lastData);
     }    
   }
