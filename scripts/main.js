@@ -10,7 +10,7 @@ uiElements.map = new UsMap("hotspots", "Hot Spots");
 uiElements.chart = new Chart("vaccinations", "Vaccinations");
 uiElements.gauges = [
     new Gauge("cases", "Cases", {interval:[0, .04]}),
-    new Gauge("deaths", "Deaths", {interval:[0, .04]}),
+    new Gauge("deaths", "Deaths", {interval:[0, .01], numTicks:2}),
     new Gauge("hospital-staffing", "Hospital Staffing"),
     new Gauge("hospital-capacity", "Hospital Capacity")
 ];
