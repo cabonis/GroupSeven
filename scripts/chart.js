@@ -13,7 +13,7 @@ export default class Chart extends InfoCard {
 
       super(id, title, () => this.#getSettingsDialog(), (m) => this.#processSettingsUpdate(m));
 
-      this.#config.isBar = isBar;
+      this.#config.isBar != isBar;
 
       if(isBar){
           this.#chart = new BarChartSvg(this.contentId);
@@ -101,22 +101,35 @@ class LineChartSvg extends ChartSvg {
     }
 
     update(data) {
-        this.#xScale.domain(data.map(d => d.name));
+        var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
+        .key(function(d) { return d.name;})
+        .entries(data);
+
+        this.#xScale.domain(data.map(d => d.date));
         this.xAxis.transition().duration(this.animationDuration).call(d3.axisBottom(this.#xScale));
     
         this.#yScale.domain([0, d3.max(data, d => +d.value)]);
         this.yAxis.transition().duration(this.animationDuration).call(d3.axisLeft(this.#yScale));
     
-        this.chart.selectAll("line")
-            .data(data)
-            .join("line")
-            .transition()
-            .duration(this.animationDuration)
-                .attr("x", d => this.#xScale(d.name))
-                .attr("y", d => this.#yScale(d.value))
-                .attr("width", this.#xScale.bandwidth())
-                .attr("height", d => this.height - this.#yScale(d.value))
-                .attr("class", "line");
+        var res = sumstat.map(function(d){ return d.key }) // list of group names
+        var color = d3.scaleOrdinal()
+          .domain(res)
+          .range(['#e41a1c','#377eb8','#4daf4a'])
+      
+        // Draw the line
+        this.chart.selectAll(".line")
+            .data(sumstat)
+            .enter()
+            .append("path")
+              .attr("fill", "none")
+              .attr("stroke", function(d){ return color(d.key) })
+              .attr("stroke-width", 1.5)
+              .attr("d", function(d){
+                return d3.line()
+                  .x(function(d) { return x(d.date); })
+                  .y(function(d) { return y(+d.value); })
+                  (d.values)
+              })
 
     }
 }
