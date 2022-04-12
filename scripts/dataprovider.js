@@ -55,12 +55,25 @@ export default class TestDataProvider {
         }
     }
 
-    #randomBarData() {
+    #randomVaccineData(date = new Date()) {
         return [
-            {name:"1st Dose", value: Math.random() * 100},
-            {name:"2nd Dose", value: Math.random() * 100},
-            {name:"Booster", value: Math.random() * 100}
+            {name:"1st Dose", date:date, value: Math.random() * 100},
+            {name:"2nd Dose", date:date, value: Math.random() * 100},
+            {name:"Booster", date:date, value: Math.random() * 100}
         ];
+    }
+
+    #randomVaccineDataTrend() {
+        let today = new Date();        
+        let minusOneMonth = new Date(today.valueOf());
+        minusOneMonth.setMonth(today.getMonth() - 1);
+        let minusTwoMonths = new Date(today.valueOf())
+        minusTwoMonths.setMonth(today.getMonth() - 2);
+
+        let data1 = this.#randomVaccineData(today);
+        let data2 = this.#randomVaccineData(minusOneMonth);
+        let data3 = this.#randomVaccineData(minusTwoMonths);
+        return data1.concat(data2).concat(data3);
     }
 
     #randomizeHotspots() {
@@ -82,7 +95,7 @@ export default class TestDataProvider {
 
     #pushRandomData(){
         this.#uiElements.map.update(this.#randomizeHotspots());
-        this.#uiElements.chart.update(this.#randomBarData());
+        this.#uiElements.chart.update(this.#randomVaccineDataTrend());
         this.#uiElements.gauges.forEach((g, i) => g.update(this.#randomizeGaugeData(i)));
     }
 
