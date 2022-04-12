@@ -1,4 +1,4 @@
-.barchart.axis {
+.barchart.axis, .linechart.axis {
     font-size: 1em;
 }
 
@@ -10,4 +10,18 @@
 
 .bar:hover {
     fill: var(--theme-color);
-}  
+} 
+
+.line {
+    stroke: var(--active-color);
+    stroke-width: 5px;
+    fill: none;
+}
+
+.line:hover {
+    stroke: var(--theme-color);
+}
+
+.linepoint {
+    fill: var(--theme-color);
+}

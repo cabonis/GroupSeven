@@ -1,5 +1,7 @@
 import {InfoCard, ChartSvg} from './framework.js';
 
+const formatMonthYear = d3.timeFormat("%b %Y");
+
 export default class Chart extends InfoCard {
 
   #bar = "bar-chart";
@@ -72,7 +74,12 @@ export default class Chart extends InfoCard {
 class LineChartSvg extends ChartSvg {
 
     #xScale;
+    #xAxis;
+    #xAxisGenerator;
     #yScale;
+    #yAxis;
+    #yAxisGenerator
+    #lineGenerator;
         
     constructor(id) {
         
@@ -82,55 +89,68 @@ class LineChartSvg extends ChartSvg {
 
         super(id, width, height, margin);
 
-        this.#xScale = d3.scaleBand()
-            .domain([0, 100])
-            .range([ 0, this.width ])
-            .padding(0.2);
+        this.#xScale = d3.scaleLinear()
+            .range([0, this.width ]);
 
-        this.xAxis = this.chart.append("g")
+        this.#xAxis = this.chart.append("g")
             .attr("transform", `translate(0, ${height})`)
             .attr("class", "linechart axis");
+
+        this.#xAxisGenerator = d3.axisBottom(this.#xScale)
+            .tickFormat(d3.timeFormat("%b %Y"))
+            .ticks(3);
 
         this.#yScale = d3.scaleLinear()
             .domain([0, 100])
             .range([height, 0]);
 
-        this.yAxis = this.chart.append("g")
+        this.#yAxis = this.chart.append("g")
             .attr("transform", `translate(0, 0)`)
             .attr("class", "linechart axis");
+
+        this.#yAxisGenerator = d3.axisLeft(this.#yScale);
+
+        this.#lineGenerator = d3.line()
+            .x((d) => this.#xScale(d.date))
+            .y((d) => this.#yScale(+d.value));
     }
 
     update(data) {
-        var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
-        .key(function(d) { return d.name;})
-        .entries(data);
 
-        this.#xScale.domain(data.map(d => d.date));
-        this.xAxis.transition().duration(this.animationDuration).call(d3.axisBottom(this.#xScale));
+        let sumstat = d3.nest()
+            .key((d) => d.name)
+            .sortValues((a, b) => b.date - a.date)
+            .entries(data); 
+
+        this.#xAxisGenerator.ticks(sumstat[0].values.length);
+
+        this.#xScale.domain(d3.extent(data, (d) => d.date));
+        this.#xAxis.transition()
+            .duration(this.animationDuration)
+            .call(this.#xAxisGenerator);
     
         this.#yScale.domain([0, d3.max(data, d => +d.value)]);
-        this.yAxis.transition().duration(this.animationDuration).call(d3.axisLeft(this.#yScale));
-    
-        var res = sumstat.map(function(d){ return d.key }) // list of group names
-        var color = d3.scaleOrdinal()
-          .domain(res)
-          .range(['#e41a1c','#377eb8','#4daf4a'])
-      
-        // Draw the line
-        this.chart.selectAll(".line")
-            .data(sumstat)
-            .enter()
-            .append("path")
-              .attr("fill", "none")
-              .attr("stroke", function(d){ return color(d.key) })
-              .attr("stroke-width", 1.5)
-              .attr("d", function(d){
-                return d3.line()
-                  .x(function(d) { return x(d.date); })
-                  .y(function(d) { return y(+d.value); })
-                  (d.values)
-              })
+        this.#yAxis.transition()
+            .duration(this.animationDuration)
+            .call(this.#yAxisGenerator);
 
+        this.chart.selectAll(".line")
+            .data(sumstat, d => d.key)
+            .join("path")
+            .transition()
+            .duration(this.animationDuration)
+            .attr("class", "line")
+            .attr("d", (d) => this.#lineGenerator(d.values));
+
+        this.chart.selectAll("circle")
+            .data(data)
+            .join("circle")
+            .transition()
+            .duration(this.animationDuration)
+            .attr("class", "linepoint")
+            .attr("cx", (d) => this.#xScale(d.date))
+            .attr("cy", (d) => this.#yScale(d.value))
+            .attr("r", 6); 
     }
 }
 
@@ -138,7 +158,9 @@ class LineChartSvg extends ChartSvg {
 class BarChartSvg extends ChartSvg {
     
     #xScale;
+    #xAxis;
     #yScale;
+    #yAxis;
 
     constructor(id){
 
@@ -153,7 +175,7 @@ class BarChartSvg extends ChartSvg {
             .range([ 0, this.width ])
             .padding(0.2);
         
-        this.xAxis = this.chart.append("g")
+        this.#xAxis = this.chart.append("g")
             .attr("transform", `translate(0, ${height})`)
             .attr("class", "barchart axis");
 
@@ -161,20 +183,24 @@ class BarChartSvg extends ChartSvg {
             .domain([0, 100])
             .range([height, 0]);
         
-        this.yAxis = this.chart.append("g")
+        this.#yAxis = this.chart.append("g")
             .attr("transform", `translate(0, 0)`)
             .attr("class", "barchart axis");
     }
 
     update(data) {
-        this.#xScale.domain(data.map(d => d.name));
-        this.xAxis.transition().duration(this.animationDuration).call(d3.axisBottom(this.#xScale));
 
-        this.#yScale.domain([0, d3.max(data, d => +d.value)]);
-        this.yAxis.transition().duration(this.animationDuration).call(d3.axisLeft(this.#yScale));
+        let maxDate = d3.max(data, d => d.date);
+        let recentData = data.filter(d => d.date == maxDate);
+
+        this.#xScale.domain(recentData.map(d => d.name));
+        this.#xAxis.transition().duration(this.animationDuration).call(d3.axisBottom(this.#xScale));
+
+        this.#yScale.domain([0, d3.max(recentData, d => +d.value)]);
+        this.#yAxis.transition().duration(this.animationDuration).call(d3.axisLeft(this.#yScale));
 
         this.chart.selectAll("rect")
-            .data(data)
+            .data(recentData)
             .join("rect")
             .transition()
             .duration(this.animationDuration)
