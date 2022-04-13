@@ -132,17 +132,26 @@ class UsMapSvg extends ChartSvg{
 
     update(hotspotIds){
         
+        let self = this;
         if(!this.#counties) { return; }
 
         const continentalUsCutoff = 57000;
 
         hotspotIds = hotspotIds.filter(h => h < continentalUsCutoff);
+
+        function lookupFips(id) {
+            let fipsid = id.toString();
+            if(fipsid.length<=4){
+                fipsid=0+fipsid
+            }
+            return self.#fips[fipsid];
+        }
         
         this.#map.selectAll("circle")
             .data(hotspotIds, d => d)            
             .join(enter => enter.append("circle")
                                 .attr("class", "hotspot")   
-                                .on("mouseenter", (d) => Tooltip.show(this.#fips[d], d3.event))
+                                .on("mouseenter", (d) => Tooltip.show(lookupFips(d), d3.event))
                                 .on("mousemove", () => Tooltip.move(d3.event))
                                 .on("mouseout", () => Tooltip.hide())                             
                                 .call(enter => enter.attr("transform", (d) => `translate(${this.#geoGen.centroid(this.#counties[d])})`)
@@ -153,5 +162,5 @@ class UsMapSvg extends ChartSvg{
                                     .duration(this.animationDuration / 2)
                                     .attr("r", 6)));                            
                                     
-    } 
+    }  
 }
