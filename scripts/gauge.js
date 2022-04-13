@@ -1,4 +1,4 @@
-import {InfoCard, ChartSvg} from './framework.js';
+import {InfoCard, ChartSvg, Tooltip} from './framework.js';
 
 export default class Gauge extends InfoCard {
 
@@ -14,6 +14,7 @@ export default class Gauge extends InfoCard {
 
   #icon;
   #label;
+  #tooltip;
   #labelMultiplier = 1;
   #gaugeSvg;
   #config = {isDailyCount: true};
@@ -27,8 +28,8 @@ export default class Gauge extends InfoCard {
 
       const contentTemplate = `
       <div class="row">
-        <div class="col-10"><span class="gauge label" id="${labelId}" title="${this.#dailyText}"></span></div>
-        <div class="col-2"><span class="${this.#dailyClass}" id="${iconId}" title="${this.#dailyText}"></span></div>
+        <div class="col-10"><span class="gauge label" id="${labelId}"></span></div>
+        <div class="col-2"><span class="${this.#dailyClass}" id="${iconId}"></span></div>
       </div>
       <div class="row">
         <div class="col-12" id="${svgId}"></div>
@@ -39,10 +40,16 @@ export default class Gauge extends InfoCard {
       div.innerHTML = contentTemplate;
       document.getElementById(this.contentId).appendChild(div);
 
+      d3.select("#" + id).selectAll("span")
+        .on("mouseenter", (d) => Tooltip.show(this.#tooltip, d3.event))
+        .on("mousemove", () => Tooltip.move(d3.event))
+        .on("mouseout", () => Tooltip.hide())
+
       if(options?.interval) {
         this.#labelMultiplier = options.interval[1] - options.interval[0];
       }
 
+      this.#tooltip = this.#dailyText;
       this.#label = document.getElementById(labelId);
       this.#icon = document.getElementById(iconId);
       this.#gaugeSvg = new GaugeSvg(svgId, options);
@@ -72,12 +79,12 @@ export default class Gauge extends InfoCard {
     this.#config.isDailyCount = modal.querySelector(`#${this.#dailyId}`).checked;
 
     if(this.#config.isDailyCount){
-      this.#label.title = this.#icon.title = this.#dailyText;
+      this.#tooltip = this.#dailyText;
       this.#icon.classList.remove(this.#averageClass);
       this.#icon.classList.add(this.#dailyClass);
     }
     else {
-      this.#label.title = this.#icon.title = this.#averageText;
+      this.#tooltip = this.#averageText;
       this.#icon.classList.remove(this.#dailyClass);
       this.#icon.classList.add(this.#averageClass);
     }
