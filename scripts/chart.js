@@ -1,4 +1,4 @@
-import {InfoCard, ChartSvg} from './framework.js';
+import {InfoCard, ChartSvg, Tooltip} from './framework.js';
 
 const formatMonthYear = d3.timeFormat("%b %Y");
 
@@ -136,6 +136,9 @@ class LineChartSvg extends ChartSvg {
         this.chart.selectAll(".line")
             .data(sumstat, d => d.key)
             .join("path")
+            .on("mouseenter", (d) => Tooltip.show(d.key, d3.event))
+            .on("mousemove", () => Tooltip.move(d3.event))
+            .on("mouseout", () => Tooltip.hide())
             .transition()
             .duration(this.animationDuration)
             .attr("class", "line")
@@ -200,6 +203,9 @@ class BarChartSvg extends ChartSvg {
         this.chart.selectAll("rect")
             .data(recentData)
             .join("rect")
+            .on("mouseenter", (d) => Tooltip.show(`${Math.round(d.value)}%`, d3.event))
+            .on("mousemove", () => Tooltip.move(d3.event))
+            .on("mouseout", () => Tooltip.hide())            
             .transition()
             .duration(this.animationDuration)
                 .attr("x", d => this.#xScale(d.name))

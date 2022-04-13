@@ -14,8 +14,9 @@
 
 .line {
     stroke: var(--active-color);
-    stroke-width: 5px;
+    stroke-width: 6px;
     fill: none;
+    cursor: pointer;
 }
 
 .line:hover {

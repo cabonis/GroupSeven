@@ -150,3 +150,37 @@ export class EventBus {
     }
 }
 
+export class Tooltip {
+
+    static #id = "framework-tooltip";
+    static #tooltip;
+
+    static show(text, location){
+
+        if(!text) {
+            return;
+        }
+
+        if(!this.#tooltip) {
+            let div = document.createElement("div");
+            div.id = this.#id;
+            div.classList.add("tooltip");
+            document.body.appendChild(div);
+            this.#tooltip = document.getElementById(this.#id);
+        }
+
+        this.#tooltip.innerHTML = text;
+        this.move(location);
+        this.#tooltip.classList.add("active");
+    }
+
+    static move(location) {
+        this.#tooltip.style.left = `${location.pageX + 10}px`;
+        this.#tooltip.style.top = `${location.pageY + 10}px`;
+    }
+
+    static hide() {
+        this.#tooltip.classList.remove("active");
+    }
+}
+
