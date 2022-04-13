@@ -11,9 +11,25 @@ export default class TestDataProvider {
     #counties = [];
     #hotspots = [];
     #gauges = [];
+    #vaccineScales = {}
 
     constructor(uiElements) {
         this.#uiElements = uiElements;
+
+        this.#vaccineScales.dose1 = d3.scaleTime()
+        .domain([new Date(Date.parse("2020-12-11T00:00:00")), new Date()])
+        .range([0, 87])
+        .clamp(true);
+
+        this.#vaccineScales.dose2 = d3.scaleTime()
+        .domain([new Date(Date.parse("2021-01-01T00:00:00")), new Date()])
+        .range([0, 85])
+        .clamp(true);
+
+        this.#vaccineScales.booster = d3.scaleTime()
+        .domain([new Date(Date.parse("2021-10-20T00:00:00")), new Date()])
+        .range([0, 72])
+        .clamp(true);
     }
 
     #randomNumber(min, max, round = true) {
@@ -55,24 +71,25 @@ export default class TestDataProvider {
         }
     }
 
-    #randomVaccineData(date = new Date()) {
-        return [
-            {name:"1st Dose", date:date, value: Math.random() * 100},
-            {name:"2nd Dose", date:date, value: Math.random() * 100},
-            {name:"Booster", date:date, value: Math.random() * 100}
-        ];
-    }
+    #randomVaccineDataTrend(start) {     
+        var self = this;
 
-    #randomVaccineDataTrend() {
-        let today = new Date();        
-        let minusOneMonth = new Date(today.valueOf());
-        minusOneMonth.setMonth(today.getMonth() - 1);
-        let minusTwoMonths = new Date(today.valueOf())
-        minusTwoMonths.setMonth(today.getMonth() - 2);
+        function randomVaccineData(date) {
+            return [
+                {name:"1st Dose", date:date, value: self.#vaccineScales.dose1(date)},
+                {name:"2nd Dose", date:date, value: self.#vaccineScales.dose2(date)},
+                {name:"Booster", date:date, value: self.#vaccineScales.booster(date)}
+            ];
+        }
 
-        let data1 = this.#randomVaccineData(today);
-        let data2 = this.#randomVaccineData(minusOneMonth);
-        let data3 = this.#randomVaccineData(minusTwoMonths);
+        let minusOneMonth = new Date(start.valueOf());
+        minusOneMonth.setMonth(start.getMonth() - 1);
+        let minusTwoMonths = new Date(start.valueOf())
+        minusTwoMonths.setMonth(start.getMonth() - 2);
+
+        let data1 = randomVaccineData(start);
+        let data2 = randomVaccineData(minusOneMonth);
+        let data3 = randomVaccineData(minusTwoMonths);
         return data1.concat(data2).concat(data3);
     }
 
@@ -93,9 +110,9 @@ export default class TestDataProvider {
         return this.#hotspots;
     }
 
-    #pushRandomData(){
+    #pushRandomData(date){
         this.#uiElements.map.update(this.#randomizeHotspots());
-        this.#uiElements.chart.update(this.#randomVaccineDataTrend());
+        this.#uiElements.chart.update(this.#randomVaccineDataTrend(date));
         this.#uiElements.gauges.forEach((g, i) => g.update(this.#randomizeGaugeData(i)));
     }
 
@@ -106,12 +123,15 @@ export default class TestDataProvider {
             const counties = topojson.feature(us, us.objects.counties).features;
             counties.forEach(c => this.#counties.push(c.id));
 
-            this.#uiElements.timecontrol.updateTimeRange([new Date(Date.parse("2020-01-01T00:00:00")), new Date()]);
+            let start = new Date(Date.parse("2020-01-01T00:00:00"));
+            let end = new Date();
 
-            this.#pushRandomData();
+            this.#uiElements.timecontrol.updateTimeRange([start, end]);
 
-            EventBus.subscribe("DateChanged", () => {
-                this.#pushRandomData();
+            this.#pushRandomData(start);
+
+            EventBus.subscribe("DateChanged", (date) => {
+                this.#pushRandomData(date);
             });
         });
     }
