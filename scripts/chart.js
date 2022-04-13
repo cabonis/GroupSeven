@@ -85,7 +85,7 @@ class LineChartSvg extends ChartSvg {
         
         const width = 400;
         const height = 450;
-        const margin = { top: 20, right: 20, bottom: 20, left: 30 }
+        const margin = { top: 20, right: 20, bottom: 20, left: 35 }
 
         super(id, width, height, margin);
 
@@ -129,7 +129,6 @@ class LineChartSvg extends ChartSvg {
             .duration(this.animationDuration)
             .call(this.#xAxisGenerator);
     
-        this.#yScale.domain([0, d3.max(data, d => +d.value)]);
         this.#yAxis.transition()
             .duration(this.animationDuration)
             .call(this.#yAxisGenerator);
@@ -166,7 +165,7 @@ class BarChartSvg extends ChartSvg {
 
         const width = 400;
         const height = 450;
-        const margin = { top: 20, right: 20, bottom: 20, left: 30 }
+        const margin = { top: 20, right: 20, bottom: 20, left: 35 }
 
         super(id, width, height, margin);
 
@@ -196,7 +195,6 @@ class BarChartSvg extends ChartSvg {
         this.#xScale.domain(recentData.map(d => d.name));
         this.#xAxis.transition().duration(this.animationDuration).call(d3.axisBottom(this.#xScale));
 
-        this.#yScale.domain([0, d3.max(recentData, d => +d.value)]);
         this.#yAxis.transition().duration(this.animationDuration).call(d3.axisLeft(this.#yScale));
 
         this.chart.selectAll("rect")
